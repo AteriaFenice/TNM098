@@ -16,11 +16,11 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     // Max and min values
-    var max_x = d3.max(data, function(d){return +d.GazePointX; }); 
-    var max_y = d3.max(data, function(d){return +d.GazePointY; }); 
+    var max_x = d3.max(data, function(d){return +d["GazePointX(px)"]; }); 
+    var max_y = d3.max(data, function(d){return +d["GazePointY(px)"]; }); 
 
-    var min_x = d3.min(data, function(d){return +d.GazePointX; }); 
-    var min_y = d3.min(data, function(d){return +d.GazePointY; }); 
+    var min_x = d3.min(data, function(d){return +d["GazePointX(px)"]; }); 
+    var min_y = d3.min(data, function(d){return +d["GazePointY(px)"]; }); 
 
     // Add X axis
     const x = d3.scaleLinear()
@@ -49,8 +49,8 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
     .attr("stroke-width", 1.5)
     .attr("opacity", 0.1)
     .attr("d", d3.line()
-    .x(function(d) { return x(d.GazePointX) })
-    .y(function(d) { return y(d.GazePointY) })
+    .x(function(d) { return x(d["GazePointX(px)"]) })
+    .y(function(d) { return y(d["GazePointY(px)"]) })
     )
 
 
@@ -59,9 +59,9 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
         .selectAll("dot")
         .data(data)
         .join("circle")
-            .attr("cx", function (d) { return x(d.GazePointX); } )
-            .attr("cy", function (d) { return y(d.GazePointY); } )
-            .attr("r", function(d) {return (d.GazeEventDuration)/100}) // radius of the dot
+            .attr("cx", function (d) { return x(d["GazePointX(px)"]); } )
+            .attr("cy", function (d) { return y(d["GazePointY(px)"]); } )
+            .attr("r", function(d) {return (d["GazeEventDuration(mS)"])/100}) // radius of the dot
             .style("fill", function(d) {
                 if(d.GazePointX > 800 && d.GazePointY > 500) 
                     d.color = '#ff0000'
@@ -99,7 +99,7 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
     .selectAll("dot")
     .data(data)
     .join("circle")
-        .attr("cx", function (d) { return x(d.GazePointX); } )
+        .attr("cx", function (d) { return x(d["GazePointX(px)"]); } )
         .attr("cy",  function(d) {
                 if(d.GazePointX > 800 && d.GazePointY > 500) 
                     heights = height/5-60
@@ -111,7 +111,7 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
                     heights = height/5-20
                 return heights
             })
-        .attr("r", function(d) {return (d.GazeEventDuration)/100}) // radius of the dot
+        .attr("r", function(d) {return (d["GazeEventDuration(mS)"])/100}) // radius of the dot
         .style("fill", function(d) {return (d.color)})
         .style("opacity", "0.7")
         .attr("stroke", "black");
