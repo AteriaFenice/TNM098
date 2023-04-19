@@ -1,4 +1,4 @@
-﻿RecordingTimestamp	FixationIndex	GazeEventDuration(mS)	GazePointIndex	GazePointX	GazePointY
+﻿RecordingTimestamp	FixationIndex	GazeEventDuration	GazePointIndex	GazePointX	GazePointY
 127	1	23	37	555	346	
 137	2	40	40	487	221	
 176	3	200	52	500	264	
