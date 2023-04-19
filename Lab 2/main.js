@@ -63,11 +63,11 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
             .attr("cy", function (d) { return y(d["GazePointY(px)"]); } )
             .attr("r", function(d) {return (d["GazeEventDuration(mS)"])/100}) // radius of the dot
             .style("fill", function(d) {
-                if(d.GazePointX > 800 && d.GazePointY > 500) 
+                if(d["GazePointX(px)"] > 800 && d["GazePointY(px)"] > 500) 
                     d.color = '#ff0000'
-                else if (d.GazePointX > 800 && d.GazePointY < 500)
+                else if (d["GazePointX(px)"] > 800 && d["GazePointY(px)"] < 500)
                     d.color = '#00ff00'
-                else if (d.GazePointX < 800 && d.GazePointY > 500)
+                else if (d["GazePointX(px)"] < 800 && d["GazePointY(px)"] > 500)
                     d.color = '#ffff00'
                 else
                     d.color = '#0000ff'
@@ -101,11 +101,11 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
     .join("circle")
         .attr("cx", function (d) { return x(d["GazePointX(px)"]); } )
         .attr("cy",  function(d) {
-                if(d.GazePointX > 800 && d.GazePointY > 500) 
+                if(d["GazePointX(px)"] > 800 && d["GazePointY(px)"] > 500) 
                     heights = height/5-60
-                else if (d.GazePointX > 800 && d.GazePointY < 500)
+                else if (d["GazePointX(px)"] > 800 && d["GazePointY(px)"] < 500)
                     heights = height/5
-                else if (d.GazePointX < 800 && d.GazePointY > 500)
+                else if (d["GazePointX(px)"] < 800 && d["GazePointY(px)"] > 500)
                     heights = height/5-40
                 else
                     heights = height/5-20
