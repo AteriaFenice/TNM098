@@ -37,11 +37,6 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
     svg.append("g")
     .call(d3.axisLeft(y));
 
-    // Add a scale for bubble color
-    var myColor = d3.scaleOrdinal()
-    .domain([0, 3])
-    .range(d3.schemeSet2);
-
     svg.append('path')
     .datum(data)
     .attr("fill", "none")
@@ -86,7 +81,7 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
     const t = d3.scaleLinear()
-    .domain([d3.min(data, function(d){return +d.RecordingTimestamp})/1000, d3.max(data, function(d){return +d.RecordingTimestamp})/1000])
+    .domain([d3.min(data, function(d){return +d["RecordingTimestamp"]})/1000, d3.max(data, function(d){return +d["RecordingTimestamp"]})/1000])
     .range([0, width]);
 
     time_line.append("g")
@@ -99,7 +94,7 @@ d3.tsv("EyeTrack-raw.tsv").then(function(data){
     .selectAll("dot")
     .data(data)
     .join("circle")
-        .attr("cx", function (d) { return x(d["GazePointX(px)"]); } )
+        .attr("cx", function (d) { return t(d["RecordingTimestamp"]/1000); } )
         .attr("cy",  function(d) {
                 if(d["GazePointX(px)"] > 800 && d["GazePointY(px)"] > 500) 
                     heights = height/5-60
