@@ -26,3 +26,20 @@ vec_color =  [[] for i in range(12)] # color
 cv2.imshow('color image', img_rgb) # Show image
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
+''' Color Mean feature vectors'''
+vec_meanColor = [[]for i in range(12)]
+
+for i in range(12):
+    vec_meanColor[i] = cv2.mean(images[i])
+    vec_meanColor[i] = vec_meanColor[i][:3] # ignore last value in array, contains b, g, r!
+
+#print(vec_meanColor)
+
+''' Edge feature vectors'''
+vec_edges = [[]for i in range(12)]
+
+for i in range(12):
+    vec_edges[i] = cv2.Canny(images[i], 100, 200).flatten() # 100 and 200 are the minimum and maximum values in hysteresis thresholding.
+
+print(vec_edges)
