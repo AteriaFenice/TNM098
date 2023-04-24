@@ -8,10 +8,6 @@ img_chosen = 10 # Image 11
 images = [cv2.imread(file) for file in glob.glob("Lab3.1/*.jpg")] # Load in all files
 img_rgb = images[img_chosen]
 
-print(img_rgb.shape)
-
-#print(img)
-
 b,g,r = img_rgb[1,1] # Testing to see if we get the color from px in position (1,1)
 
 # Debug
@@ -38,12 +34,12 @@ for i in range(12):
     img = images[i]
 
     # Calculate the histogram for each image in the dataset
-    hist = cv2.calcHist([img], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+    hist = cv2.calcHist([img], [0, 1, 2], None, [32, 32, 32], [0, 256, 0, 256, 0, 256])
     hist = hist.flatten() # Making the histogram into one vector -> feature vector
 
     vec_color[i] = hist # puts all the feature vectors in the same color feature vector
 
-    #print(i, ": ", vec_color[i].shape)
+    print(i, ": ", vec_color[i][11])
 
 # Compare the feature vector with the original image
 dist_color = []
@@ -54,7 +50,7 @@ for i in range(12):
         d1 += pow((vec_color[i][j]-vec_color[img_chosen][j]),2) # Calculates total distance vector
 
     dist_color.append(d1)
-    #print("image ", i, " distance: ", d1)
+    print("image ", i, " distance: ", d1)
 
 
 # Gives the indexes based on the distances dist_color
