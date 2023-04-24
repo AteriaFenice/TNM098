@@ -2,9 +2,13 @@ import numpy as np
 import pandas as pd
 import cv2
 import glob
+from matplotlib import pyplot as plt
 
-img_rgb = cv2.imread("Lab3.1/02.jpg")
+img_chosen = 10 # Image 11
 images = [cv2.imread(file) for file in glob.glob("Lab3.1/*.jpg")] # Load in all files
+img_rgb = images[img_chosen]
+
+print(img_rgb.shape)
 
 #print(img)
 
@@ -19,10 +23,61 @@ print("r: ", r)'''
 img_lab = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2Lab)
 
 # Debug
-print(img_lab[1,1])
+#print(img_lab[1,1])
+
+# Histogram of one image
+#hist = cv2.calcHist([img_rgb], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+#hist = hist.flatten() # Making the histogram into one vector -> feature vector
+#print(hist.shape)
 
 # Feature vectors 
 vec_color =  [[] for i in range(12)] # color
-cv2.imshow('color image', img_rgb) # Show image
+
+for i in range(12):
+
+    img = images[i]
+
+    # Calculate the histogram for each image in the dataset
+    hist = cv2.calcHist([img], [0, 1, 2], None, [8, 8, 8], [0, 256, 0, 256, 0, 256])
+    hist = hist.flatten() # Making the histogram into one vector -> feature vector
+
+    vec_color[i] = hist # puts all the feature vectors in the same color feature vector
+
+    #print(i, ": ", vec_color[i].shape)
+
+# Compare the feature vector with the original image
+dist_color = []
+
+for i in range(12):
+    d1 = 0
+    for j in range(len(vec_color)):
+        d1 += pow((vec_color[i][j]-vec_color[img_chosen][j]),2) # Calculates total distance vector
+
+    dist_color.append(d1)
+    #print("image ", i, " distance: ", d1)
+
+
+# Gives the indexes based on the distances dist_color
+ind_color = sorted(range(len(dist_color)), key = lambda k: dist_color[k])
+
+print(ind_color)
+
+
+# Show one image
+'''cv2.imshow('color image', img_rgb) # Show chosen image
 cv2.waitKey(0)
-cv2.destroyAllWindows()
+cv2.destroyAllWindows()'''
+
+# Create figure
+fig = plt.figure(figsize=(10,10))
+
+# Create subplots to print all images
+for i in range(12):
+    fig.add_subplot(4, 3, 1+i)
+    # adds the images based on the ranking from the vectors
+    # Change the from BGR to RGB since cv2 loads images in BGR for some reason
+    plt.imshow(cv2.cvtColor(images[ind_color[i]], cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+    plt.title(i)
+
+plt.show() # Show rank imgaes
