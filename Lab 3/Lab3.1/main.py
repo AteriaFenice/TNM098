@@ -5,7 +5,7 @@ import glob
 from matplotlib import pyplot as plt
 import math
 
-img_chosen = 3 # Image 11
+img_chosen = 10 # Image 11
 #images_original = [cv2.imread(file) for file in glob.glob("Lab3.1/*.jpg")] # Load in all files
 images = [cv2.imread(file) for file in glob.glob("Lab3.1/*.jpg")] # Load in all files
 #img_rgb = images[img_chosen]
@@ -59,6 +59,7 @@ print("r: ", r)'''
 vec_color =  [[] for i in range(12)] # color distribution
 vec_meanColor = [[]for i in range(12)] # mean color
 vec_edges = [[]for i in range(12)] # edges
+edges = [[]for i in range(12)] # edges
 vec_lum = [[]for i in range(12)] # illumination
 
 for i in range(12):
@@ -80,12 +81,14 @@ for i in range(12):
     img2 = cv2.cvtColor(images[i], cv2.COLOR_BGR2HSV)
 
     # Calculate the histogram for each image in the dataset
-    vec_lum[i] = cv2.calcHist([img2], [2], None, [8], [0, 256])
-    vec_lum[i] = hist.flatten() # Making the histogram into one vector -> feature vector
+    lum = cv2.calcHist([img2], [2], None, [8], [0, 256])
+    vec_lum[i] = lum.flatten() # Making the histogram into one vector -> feature vector
 
     # Edges
-    #vec_edges[i] = cv2.Canny(images[i], 100, 200).flatten() # 100 and 200 are the minimum and maximum values in hysteresis thresholding.
-
+    edges[i] = cv2.Canny(images[i], 100, 200)#.flatten() # 100 and 200 are the minimum and maximum values in hysteresis thresholding.
+    edges_hist = cv2.calcHist(edges[i], [0], None, [8], [0, 256])
+    vec_edges[i] = edges_hist.flatten()
+    cv2.imshow
     
 
     #print(i, ": ", vec_color[i][11])
@@ -102,7 +105,7 @@ print(len(vec_edges[0]))
 
 
 for i in range(12):
-    d1 = d2 = d3 = 0
+    d1 = d2 = d3 = d4 = 0
 
     # Histogram
     for j in range(len(vec_color[i])):
@@ -123,13 +126,13 @@ for i in range(12):
     if(len(vec_edges[i]) < max_len):
         max_len = len(vec_edges[i])'''
 
-    '''for j in range(max_len): 
-        d3 += abs(vec_edges[i][j])-abs(vec_edges[img_chosen][j])
-    dist_edges.append(d3)'''
+    for j in range(len(vec_edges[i])): 
+        d4 += abs(vec_edges[i][j]-vec_edges[img_chosen][j])
+    dist_edges.append(d4)
 
 
 
-    print("image ", i, " distance: ", d3)
+    print("image ", i, " distance: ", d4)
 
 
 # Gives the indexes based on the distances dist_color
@@ -148,6 +151,16 @@ print("edge ranking: ", ind_edges)
 '''cv2.imshow('color image', img_rgb) # Show chosen image
 cv2.waitKey(0)
 cv2.destroyAllWindows()'''
+fig = plt.figure(figsize=(10,10))
+
+# Create subplots to print all images
+for i in range(12):
+    fig.add_subplot(4, 3, 1+i)
+    # adds the images based on the ranking from the vectors
+    # Change the from BGR to RGB since cv2 loads images in BGR for some reason
+    plt.imshow(edges[ind_edges[i]])
+    plt.axis('off')
+    plt.title(i)
 
 # Create figure
 fig = plt.figure(figsize=(10,10))
@@ -157,7 +170,7 @@ for i in range(12):
     fig.add_subplot(4, 3, 1+i)
     # adds the images based on the ranking from the vectors
     # Change the from BGR to RGB since cv2 loads images in BGR for some reason
-    plt.imshow(cv2.cvtColor(images[ind_lum[i]], cv2.COLOR_BGR2RGB))
+    plt.imshow(cv2.cvtColor(images[ind_edges[i]], cv2.COLOR_BGR2RGB))
     plt.axis('off')
     plt.title(i)
 
