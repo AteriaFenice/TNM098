@@ -5,11 +5,21 @@ import nltk
 import os # for reading in files
 import string
 
+# Print all files 
+path = 'Lab3.2/'
+all_files = os.listdir(path)
 
-with open('Lab3.2/01.txt', 'r') as f:
-    file = f.readlines()
+files = [[] for i in range(10)]
+counter = 0
 
+for fle in all_files:
+    with open(os.path.join(path, fle)) as f:
+        files[counter] = f.read()
+        counter += 1
+        print(counter)
+        f.close()
 
-print(file)
+# Debug
+print(type(files[2]))
 
-file.translate(str.maketrans('','', string.punctuation)) # Remove punctuation
+#file.translate(str.maketrans('','', string.punctuation)) # Remove punctuation
