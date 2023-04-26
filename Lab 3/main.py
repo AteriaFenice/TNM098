@@ -35,18 +35,12 @@ files = [file.replace('\n', " ") for file in files]
 print('load in all files')
 
 # Divide texts into sentences
-#nltk.download('punkt')
-#token = nltk.data.load('tokenizer/punkt/english.pickle')
 files = [tokenize.sent_tokenize(file) for file in files]
 
 print('split text into sentences')
 
 
 # Reshape text
-'''for i in range(0, len(files)):
-    files[i] = [files[i].translate(str.maketrans('','', string.punctuation))] # Remove punctuation
-    files[i] = files[i].lower() # Lower case letters'''
-
 files = [remove_punctuation(file) for file in files]
 files = [lower_case(file) for file in files]
 
