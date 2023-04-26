@@ -98,6 +98,8 @@ for i in range(12):
     rank[ind_lum[i]] += i*0.3
     rank[ind_edges[i]] += i*0.3
 
+print('rank:', rank)
+
 # final ranking
 ind_rank = sorted(range(len(rank)), key = lambda k:rank[k])
 
