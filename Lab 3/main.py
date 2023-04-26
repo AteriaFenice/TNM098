@@ -20,6 +20,11 @@ for fle in all_files:
         f.close()
 
 # Debug
-print(type(files[2]))
+print(files[2])
 
-#file.translate(str.maketrans('','', string.punctuation)) # Remove punctuation
+# Reshape text
+for i in range(0, len(files)):
+    files[i] = files[i].translate(str.maketrans('','', string.punctuation)) # Remove punctuation
+    files[i] = files[i].lower() # Lower case letters
+
+print(files[2])
