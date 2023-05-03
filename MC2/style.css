@@ -1,0 +1,18 @@
+#map {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+#cityMap {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+
+#roadMap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 10%;
+}

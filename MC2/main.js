@@ -23,17 +23,7 @@ function csvToArray(str, delimeter =',') {
     return arr;
 }
 
-const fs = require('fs');
-
-fs.readFile('/MC2/car-assignments.csv', 'utf8', (err, data)=> {
-    if (err) {
-        console.log(err);
-        return;
-    }
-    console.log(data);
-});
-
-
+ 
 var scale = 0.5
 var image_height = 1535 * scale
 var image_weight = 2740 * scale
@@ -43,4 +33,12 @@ var cityMap = document.createElement('img')
 cityMap.src = 'MC2/MC2-tourist.jpg'
 cityMap.setAttribute('height', image_height)
 cityMap.setAttribute('width', image_weight)
+cityMap.setAttribute('id', 'cityMap')
 document.getElementById('map').appendChild(cityMap)
+
+var roadMap = document.createElement('img')
+roadMap.src = 'MC2/Abila.svg'
+roadMap.setAttribute('height', image_height)
+roadMap.setAttribute('width', image_weight)
+roadMap.setAttribute('id', 'roadMap')
+document.getElementById('map').appendChild(roadMap)
