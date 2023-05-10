@@ -28,7 +28,7 @@ const svg = d3.select("#map")
 
 // Load GeoJson file of roads 
 d3.json('MC2/Abila.json').then(function(json){
-    console.log(json)
+    //console.log(json)
 
     var projection = d3.geoEquirectangular()
     .fitSize([image_width, image_height], json)
@@ -47,17 +47,25 @@ d3.json('MC2/Abila.json').then(function(json){
 
     // Load and plot gps coordinates
     d3.csv("MC2/gps.csv").then(function(data){
+        console.log(data.filter(function(d){
+            return d.id == '4';
+        })
+        
+        );
+
         svg.selectAll('.pin')
-        .data(data)
+        .data(data.filter(function(d){
+            return d.id == '4';
+        }))
         .enter()
         .append('circle', '.pin')
         .attr('r', 1)
-        .attr('color', 'red')
+        .attr('fill', 'red')
         .attr('transform', function(d){
             return 'translate(' + projection([d.long, d.lat]) + ')';
         });
     
+    });
 });
 
-});
 
