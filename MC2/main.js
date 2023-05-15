@@ -305,10 +305,27 @@ d3.json('MC2/Abila.json').then(function(json){
     }
 
     // Set range values and call slider
-    const rangeMax = Math.max.apply(null, data.Timestamp)
-    const rangeMin = Math.min.apply(null, data.Timestamp)
+    //const rangeMax = Math.max.apply(null, data.Timestamp)
+    //const rangeMin = Math.min.apply(null, data.Timestamp)
 
-    myslider = slider(rangeMin, rangeMax, undefined, undefined)
+    const range_data = Array.from({length:14},(v,k)=>k+1)
+    console.log(range_data);
+
+    const min_range = range_data[0];
+    const max_range = range_data[13];
+
+    const min_date = new Date(min_time);
+    const max_date = new Date(max_time);
+
+    console.log(min_date);
+    console.log(max_date);
+
+    var Difference_In_Time = max_date.getTime() - min_date.getTime();
+    var Difference_In_Days = Difference_In_Time / (1000 * 3600 * 24);
+
+    console.log(Difference_In_Days);
+
+    myslider = slider(min_date, max_date, undefined, undefined)
     
 
     // Update node link diagram based on slider
