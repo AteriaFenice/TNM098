@@ -89,8 +89,8 @@ d3.json('MC2/Abila.json').then(function(json){
     })
     
     // Slider function, example from: https://observablehq.com/@sarah37/snapping-range-slider-with-d3-brush
-    let slider = function(min, max, starting_min=min, starting_max=max) {
-        var range = [min, max + 1]
+    let slider = function(min, max, starting_min=min, starting_max=max, days) {
+        var range = [0, Math.round(days)]//[min, max + 1]
         var starting_range = [starting_min, starting_max + 1]
 
         // set width and height of svg
@@ -133,13 +133,13 @@ d3.json('MC2/Abila.json').then(function(json){
             .attr('id', 'labelleft')
             .attr('x', 0)
             .attr('y', height + 15)
-            .text(range[0])
+            .text(range[0]) //output date!!!
 
         var labelR = g.append('text')
             .attr('id', 'labelright')
             .attr('x', 0)
             .attr('y', height + 15)
-            .text(range[1])
+            .text(range[1]) //output date!!!
 
         // define brush
         var brush = d3.brushX()
@@ -325,7 +325,7 @@ d3.json('MC2/Abila.json').then(function(json){
 
     console.log(Difference_In_Days);
 
-    myslider = slider(min_date, max_date, undefined, undefined)
+    myslider = slider(min_date, max_date, undefined, undefined, Difference_In_Days) // start with whole range visible
     
 
     // Update node link diagram based on slider
