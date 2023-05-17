@@ -74,6 +74,7 @@ d3.json('MC2/Abila.json').then(function(json){
     d3.csv("MC2/gps.csv").then(function(data){
         svg.selectAll('.pin')
         .data(data)
+<<<<<<< HEAD
         .enter()
         .append('square', '.pin')//circle
         .attr('r', 1)
@@ -102,13 +103,19 @@ d3.json('MC2/Abila.json').then(function(json){
         .append('circle', '.pin')
         .attr('r', 5)
         .attr('fill', 'blue')
+=======
+        .enter()
+        .append('circle', '.pin')
+        .attr('r', 1)
+        .attr('color', 'red')
+>>>>>>> parent of 937f2ba (create filter by id)
         .attr('transform', function(d){
             return 'translate(' + projection([24.879302, 36.055626]) + ')';
         })*/
     
-    });
 });
 
+});
 
 /* Ahaggo Museum: long, lat: [24.878464, 36.07592]
 Kronos Mart: long, lat: [24.84842, 36.06722]
