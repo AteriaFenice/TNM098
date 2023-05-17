@@ -72,46 +72,23 @@ d3.json('MC2/Abila.json').then(function(json){
 
     // Load and plot gps coordinates
     d3.csv("MC2/gps.csv").then(function(data){
-        svg.selectAll('.pin')
-        .data(data)
-<<<<<<< HEAD
-        .enter()
-        .append('square', '.pin')//circle
-        .attr('r', 1)
-        .attr('color', 'red')
-        .attr('transform', function(d){
-            return 'translate(' + projection([d.long, d.lat]) + ')';
+        console.log(data.filter(function(d){
+            return d.id == '4';
         })
-        .on("mouseover", function() {
-            return tooltip.style("visibility", "visible");
-        })
-        .on("mousemove", function(d, i) {
-            tooltip.text('Car ID: ' + i.id + ' \nTime: ' + i.Timestamp);
-            return tooltip.style("top",
-                (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
-        })
-        .on("mouseout", function() {
-            return tooltip.style("visibility", "hidden");
-        })
+        
+        );
 
-        // Check store coordinates
-        /*svg.selectAll('.pin')
+        svg.selectAll('.pin')
         .data(data.filter(function(d){
             return d.id == '4';
         }))
         .enter()
         .append('circle', '.pin')
-        .attr('r', 5)
-        .attr('fill', 'blue')
-=======
-        .enter()
-        .append('circle', '.pin')
         .attr('r', 1)
-        .attr('color', 'red')
->>>>>>> parent of 937f2ba (create filter by id)
+        .attr('fill', 'red')
         .attr('transform', function(d){
             return 'translate(' + projection([24.879302, 36.055626]) + ')';
-        })*/
+        })
     
 });
 
