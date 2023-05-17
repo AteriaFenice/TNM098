@@ -72,20 +72,12 @@ d3.json('MC2/Abila.json').then(function(json){
 
     // Load and plot gps coordinates
     d3.csv("MC2/gps.csv").then(function(data){
-        console.log(data.filter(function(d){
-            return d.id == '4';
-        })
-        
-        );
-
         svg.selectAll('.pin')
-        .data(data.filter(function(d){
-            return d.id == '4';
-        }))
+        .data(data)
         .enter()
         .append('circle', '.pin')
         .attr('r', 1)
-        .attr('fill', 'red')
+        .attr('color', 'red')
         .attr('transform', function(d){
             return 'translate(' + projection([24.879302, 36.055626]) + ')';
         })
