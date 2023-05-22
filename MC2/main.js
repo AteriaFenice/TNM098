@@ -33,7 +33,7 @@ var card_data = [];
 var loyalty_data = [];
 var car_data = [];
 var gps_data = [];
-var filtered_data = [];
+var filtred_data = [];
 var filtered_gps_data = [];
 var filtered_cc_data = [];
 
@@ -62,7 +62,6 @@ var rangeRound = Math.round((data_end_date.getTime() - data_start_date.getTime()
 // Get weekday in text
 var days_text = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-
 var chosen_id = [];
 
 console.log(data_start_date);
@@ -86,7 +85,7 @@ getData().then((output) => {
     // Filter the data after getting the data from the files 
     getFilterData(start_date, end_date, chosen_id);
 
-    //console.log('finished loading data');
+    console.log('finished loading data');
 });
 
 async function getData() {
@@ -96,7 +95,7 @@ async function getData() {
         gps_data = await d3.csv('MC2/gps.csv');
         card_data = await d3.csv('MC2/cc_data.csv');
 
-        //console.log(gps_data.length);
+        console.log(gps_data.length);
 
         // CALL CREATE SLIDER FUNCTIONS HERE
         daySlider();
@@ -143,8 +142,8 @@ function getFilterData(start_date, end_date, id){
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
     });
 
-    //console.log(filtered_gps_data.length);
-    console.log('nr of nodes: ',filtered_cc_data.length);
+    console.log(filtered_gps_data.length);
+    console.log(filtered_cc_data.length);
 
     // CALL DRAW DATA POINTS HERE
     drawGPSPoints();
@@ -158,7 +157,7 @@ function unique(iterable) {
 
 function drawGPSPoints() {
 
-    //console.log('drawingGPSPoints function called')
+    console.log('drawingGPSPoints function called')
 
     var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);
 
@@ -169,7 +168,7 @@ function drawGPSPoints() {
         .attr("id", "gpsMap")
         .append("g");
 
-    d3.selectAll("rect").remove();
+    d3.selectAll("rect").remove(); // remove old data
 
     svg.selectAll("rect")
         .data(filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0}))
@@ -192,88 +191,7 @@ function drawGPSPoints() {
             return tooltip.style("visibility", "hidden");
         });
 
-        //console.log('gps data points drawn');
-}
-
-
-
-function daySlider() {
-
-    var slider = document.getElementById("rangeDay");
-    var output = document.getElementById("dateText");
-    var dayText = days_text[new Date(used_year, used_month, slider.value, start_time,0).getDay()];
-    output.innerHTML =  dayText + " " + slider.value + " Jan"; // Display the default slider value
-
-    // Update the current slider value (each time you drag the slider handle)
-    slider.oninput = function() {
-        var value = this.value;
-        dayText = days_text[new Date(used_year, used_month, this.value, start_time,0).getDay()];
-        output.innerHTML = dayText + " " + value + " Jan";
-   
-    }
-    
-    // Update the data when finished sliding
-    slider.onchange = function() {
-        //console.log(this.value);
-        var lower_date = new Date(used_year, used_month, this.value, start_time,0);
-        var upper_date = new Date(used_year, used_month, this.value, end_time,0);
-        start_date = lower_date;
-        end_date = upper_date;
-        getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtered data");
-    }
-
-}
-
-function timeSlider() {
-    var slider_lower = document.getElementById("rangeTimeLower");
-    var slider_upper = document.getElementById("rangeTimeUpper");
-    var output = document.getElementById("timeText");
-    output.innerHTML = slider_lower.value + ":00-" + slider_upper.value + ":00"; // Display the default slider value
-
-    // Update the current slider value (each time you drag the slider handle)
-    slider_lower.oninput = function() {
-        var value = this.value;
-        output.innerHTML = output.innerHTML = value + ":00-" + slider_upper.value + ":00";
-   
-    }
-
-    // Update the current slider value (each time you drag the slider handle)
-    slider_upper.oninput = function() {
-        var value = this.value;
-        output.innerHTML = output.innerHTML = slider_lower.value + ":00-" + value + ":00";
-   
-    }
-
-    // Update the data when finished sliding
-    slider_lower.onchange = function() {
-        //console.log(this.value);
-        var lower_date = new Date(used_year, used_month, start_date.getDate(), this.value, 0);
-        var upper_date = new Date(used_year, used_month, end_date.getDate(), slider_upper.value, 0);
-        
-        //console.log('lower_date: ', lower_date);
-        //console.log('higher_date: ', upper_date);
-
-        start_time = this.value;
-        start_date = lower_date;
-        end_date = upper_date;
-        getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtered data");
-    }
-
-    // Update the data when finished sliding
-    slider_upper.onchange = function() {
-        //console.log(this.value);
-        //console.log(slider_lower.value);
-        var lower_date = new Date(used_year, used_month, start_date.getDate(), slider_lower.value,0);
-        var upper_date = new Date(used_year, used_month, end_date.getDate(), this.value,0);
-        end_time = this.value;
-        start_date = lower_date;
-        end_date = upper_date;
-        getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtered data");
-    }
-    
+        console.log('gps data points drawn');
 }
 
 
@@ -288,7 +206,7 @@ function carCheckBoxes() {
 
         var label_item = document.createElement("label");
         label_item.for = d.CarID;
-        label_item.innerHTML = d.CarID;
+        label_item.innerHTML = d.FirstName + " " + d.LastName + " : " + d.CarID;
 
         var input_item = document.createElement("input");
         input_item.id = d.CarID;
