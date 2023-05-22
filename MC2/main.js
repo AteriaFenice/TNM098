@@ -34,7 +34,9 @@ var loyalty_data = [];
 var car_data = [];
 var gps_data = [];
 var filtred_data = [];
-var filtred_gps_data = [];
+var filtered_gps_data = [];
+var filtered_cc_data = [];
+
 
 // Calculate milliseconds in a year
 const minute = 1000 * 60;
@@ -83,7 +85,8 @@ async function getData() {
     try {
 
         car_data = await d3.csv('MC2/car-assignments.csv');
-        gps_data = await d3.csv('MC2/gps.csv')
+        gps_data = await d3.csv('MC2/gps.csv');
+        card_data = await d3.csv('MC2/cc_data.csv');
 
         console.log(gps_data.length);
 
@@ -103,7 +106,7 @@ function getFilterData(start_date, end_date, id){
     console.log("chosen start date: ", start_date);
     console.log("chosen end date: ", end_date)
 
-    filtred_gps_data = gps_data.filter((data) => {
+    filtered_gps_data = gps_data.filter((data) => {
         const temp_date = new Date(data.Timestamp).getTime();
 
         /*if(id == 0){
@@ -116,11 +119,22 @@ function getFilterData(start_date, end_date, id){
 
     });
 
-    console.log(filtred_gps_data.length);
+    filtered_cc_data = card_data.filter((data) => {
+        const temp_date = new Date(data.timestamp).getTime();
+        return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
+    });
+
+    console.log(filtered_gps_data.length);
+    console.log(filtered_cc_data.length);
 
     // CALL DRAW DATA POINTS HERE
     drawGPSPoints();
+    drawCCPoints();
 
+}
+
+function unique(iterable) {
+    return new Set(iterable);
 }
 
 function drawGPSPoints() {
@@ -139,48 +153,15 @@ function drawGPSPoints() {
     d3.selectAll("rect").remove();
 
     svg.selectAll("rect")
-        .data(filtred_gps_data)
+        .data(filtered_gps_data)
         .enter()
         .append("rect")
         .attr("x", d =>(d.long-MIN_LONG)*1000*MAPY*1.72+10)
         .attr("y", d => (image_width+50)/2-(d.lat-MIN_LAT)*1000*MAPX*0.47)
         .attr('width', 2)
         .attr('height', 2)
-        .attr('fill', d => {return myColor(d.id);});
-
-
-    /*d3.json('MC2/Abila.json').then(function(json){
-        //console.log(json)
-
-        var projection = d3.geoEquirectangular()
-        .fitSize([image_width, image_height], json)
-
-        var path = d3.geoPath()
-        .projection(projection);
-
-        console.log('drawingGPSPoints function called')
-
-        //var myColor = d3.scaleOrdinal().domain(car_data).range(d3.schemeSet3);
-        var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);;
-    
-        // Road
-        svg.selectAll('.pin')
-        /*.data(data.filter(function(d){
-            return d.id == '4';
-        }))
-        .data(filtred_gps_data);
-
-        svg.exit().remove();
-
-        svg.enter()
-        .append('rect', '.pin')//circle
-        .attr('width', 1)
-        .attr('height', 1)
         .attr('fill', d => {return myColor(d.id);})
-        .attr('transform', function(d){
-            return 'translate(' + projection([d.long, d.lat]) + ')';
-        })
-        /*on("mouseover", function() {
+        .on("mouseover", function() {
             return tooltip.style("visibility", "visible");
         })
         .on("mousemove", function(d, i) {
@@ -190,13 +171,84 @@ function drawGPSPoints() {
         })
         .on("mouseout", function() {
             return tooltip.style("visibility", "hidden");
-        })*/
+        });
 
         console.log('gps data points drawn');
-        
-    //});
-
 }
+
+function drawCCPoints(){
+    console.log('drawCCPoints function called')
+
+    // get all unique card numbers
+    var temp = []
+    for(var i = 0; i < card_data.length; i++){
+        temp[i] = card_data[i].last4ccnum
+    }
+    var last4 = unique(temp)
+
+    var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
+    
+    const svg = d3.select("#map")
+        .append("svg")
+        .attr("width", image_width)
+        .attr("height", image_height)
+        .attr("id", "gpsMap")
+        .append("g");
+
+    // get all stores and locations
+    var nodes = filtered_cc_data.filter(function(d){
+        return d.location == 'Kronos Mart';
+    })
+
+    var rad = 10
+    var long = 24.84842
+    var lat = 36.06722
+
+    var simulation = d3.forceSimulation(nodes)
+    .force('charge', d3.forceManyBody().strength(5))
+    .force('center', d3.forceCenter((long-MIN_LONG)*1000*MAPY*1.72+10, (image_width+50)/2-(lat-MIN_LAT)*1000*MAPX*0.47))
+    .force('collision', d3.forceCollide().radius(function(d){
+        return rad//d.price /10
+    }))
+    .on('tick', ticked)
+
+    d3.selectAll('circle').remove();
+
+    function ticked(){
+        svg.selectAll('circle')
+        .data(nodes)
+        .join('circle')
+        .attr('r', function(d){
+            //return d.price /10
+            return rad
+        })
+        .attr('fill', function(d){
+            return myColor(Array.from(last4).indexOf(d.last4ccnum))
+        })
+        .attr('fill-opacity', 0.5)
+        .attr('stroke', function(d){
+            return myColor(Array.from(last4).indexOf(d.last4ccnum))
+        })
+        .attr('cx', function(d){
+            return d.x
+        })
+        .attr('cy', function(d){
+            return d.y
+        })
+        .on("mouseover", function() {
+            return tooltip.style("visibility", "visible");
+        })
+        .on("mousemove", function(d, i) {
+            tooltip.text('Price: ' + i.price + ' \nTime: ' + i.timestamp);
+            return tooltip.style("top",
+                (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
+        })
+        .on("mouseout", function() {
+            return tooltip.style("visibility", "hidden");
+        })
+        //console.log('CC points drawn')
+    }
+};
 
 function daySlider() {
 
@@ -223,199 +275,8 @@ function daySlider() {
 }
 
 
-
-
-/*const svg = d3.select("#map")
-.append("svg")
-.attr("width", image_width)
-.attr("height", image_height)
-.attr("id", "gpsMap")
-.append("g");
-
-// Tooltip style
-let tooltip = d3.select("body")
-.append("div")
-.style("position", "absolute")
-.style("text-align", "center")
-.style("padding", "15px")
-.style("font", "12px sans-serif")
-.style("background", "#FFFFFF")
-.style("border", "0px")
-.style("border-radius", "8px")
-.style("z-index", "10")
-.style("visibility", "hidden")
-.text("a simple tooltip");
-
-// Get colors for all ids
-
-let margin2 = ({top: 10, right: 0, bottom: 20, left: 0});
-let height2 = 120
-let width2 = 50
-
-
-const interval = d3.timeHour.every(12);
-console.log(interval.value)
-
-const x = d3.scaleTime()
-    .domain([new Date(2014, 7, 1), new Date(2014, 7, width2 / 60) - 1])
-    .rangeRound([margin2.left, width2 - margin2.right])
-
-const xAxis = g => g
-    .attr("transform", `translate(0,${height2 - margin2.bottom})`)
-    .call(g => g.append("g")
-        .call(d3.axisBottom(x)
-            .ticks(interval)
-            .tickSize(-height2 + margin2.top + margin2.bottom)
-            .tickFormat(() => null))
-        .call(g => g.select(".domain")
-            .attr("fill", "#ddd")
-            .attr("stroke", null))
-        .call(g => g.selectAll(".tick line")
-            .attr("stroke", "#fff")
-            .attr("stroke-opacity", d => d <= d3.timeDay(d) ? 1 : 0.5)))
-    .call(g => g.append("g")
-        .call(d3.axisBottom(x)
-            .ticks(d3.timeDay)
-            .tickPadding(0))
-        .attr("text-anchor", null)
-        .call(g => g.select(".domain").remove())
-        .call(g => g.selectAll("text").attr("x", 6)))
-
-// Brushing
-function brush(){
-    const svg3 = d3.create("svg")
-        .attr("viewBox", [0, 0, width2, height2]);
-
-    const brush = d3.brushX()
-        .extent([[margin2.left, margin2.top], [width2 - margin2.right, height2 - margin2.bottom]])
-        .on("end", brushended);
-
-    svg3.append("g")
-        .call(xAxis);
-
-    svg3.append("g")
-        .call(brush);
-
-    function brushended(event){
-        const selection = event.selection;
-        if (!event.sourceEvent || !selection) return;
-        const [x0, x1] = selection.map(d => interval.round(x.invert(d)));
-        d3.select(this).transition().call(brush.move, x1 > x0 ? [x0, x1].map(x) : null);
-
-    }
-
-    return svg3.node();
-}
-
-
-
-const slider3 = document.createElement('div');
-slider3.appendChild(brush());
-document.getElementById('map').appendChild(slider3);
-
-    
-
-// Load GeoJson file of roads 
-    d3.json('MC2/Abila.json').then(function(json){
-        console.log(json)
-
-        var projection = d3.geoEquirectangular()
-        .fitSize([image_width, image_height], json)
-
-        var path = d3.geoPath()
-        .projection(projection);
-
-
-        // Plot geo roads, not needed if SVG image above is used
-        /*svg.selectAll('path')
-        .data(json.features)
-        .enter()
-        .append('path')
-        .attr('d', path)
-        .attr('stroke', 'dimgray')
-        .style('opacity', 0.2)
-        .on("mouseover", function() {
-            return tooltip.style("visibility", "visible");
-        })
-        .on("mousemove", function(d,i) {
-            tooltip.text('coordinates: ' + i.geometry.coordinates);
-            return tooltip.style("top",
-                (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
-        })*/// uncomment to check coordinates of roads
-
-
-        // Load and plot gps coordinates
-        /*d3.csv("MC2/gps.csv").then(function(data){
-            
-            var gps_len = data.length;
-            console.log(gps_len);
-
-            var myColor = d3.scaleOrdinal().domain(data).range(d3.schemeSet3);
-
-            var min_time = data.reduce((r, o) => o.Timestamp < r.Timestamp ? o : r).Timestamp;
-            var max_time = data.reduce((r, o) => o.Timestamp > r.Timestamp ? o : r).Timestamp;
-
-            console.log("min: ", min_time);
-            console.log("max: ", max_time);
-
-
-            // WHAT TO DO: 
-            // 1. Change min and max time value
-            // 2. Split the data between those points
-
-            var min_time_index = 1000;
-            var max_time_index = 10000;
-
-            var min_time_new = data[min_time_index].Timestamp;
-            var max_time_new = data[max_time_index].Timestamp;
-
-            console.log("new min: ", min_time_new);
-            console.log("new max: ", max_time_new);
-
-            // Road
-            svg.selectAll('.pin')
-            /*.data(data.filter(function(d){
-                return d.id == '4';
-            }))*/
-            /*.data(data.filter( d => {return min_time_new <= d.Timestamp && max_time_new >= d.Timestamp}))
-            .enter()
-            .append('rect', '.pin')//circle
-            .attr('width', 1)
-            .attr('height', 1)
-            .attr('fill', d => {return myColor(d.id);})
-            .attr('transform', function(d){
-                return 'translate(' + projection([d.long, d.lat]) + ')';
-            })
-            .on("mouseover", function() {
-                return tooltip.style("visibility", "visible");
-            })
-            .on("mousemove", function(d, i) {
-                tooltip.text('Car ID: ' + i.id + ' \nTime: ' + i.Timestamp);
-                return tooltip.style("top",
-                    (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
-            })
-            .on("mouseout", function() {
-                return tooltip.style("visibility", "hidden");
-            })
-
-            // Store
-            /*svg.selectAll('.pin')
-            .data(data)
-            .enter()
-            .append('circle', '.pin')
-            .attr('r', 1)
-            .attr('color', 'red')
-            .attr('transform', function(d){
-                return 'translate(' + projection([24.879302, 36.055626]) + ')';
-            })*/
-
-            //console.log('finished loading data');
-        
-    /*});
-
-});*/
-
-/* Ahaggo Museum: long, lat: [24.878464, 36.07592]
+/* 
+Ahaggo Museum: long, lat: [24.878464, 36.07592]
 Kronos Mart: long, lat: [24.84842, 36.06722]
 Bean There Done That: long, lat: [24.850243, 36.082679]
 Carnero Street: long, lat: [24.85899, 36.08413]
