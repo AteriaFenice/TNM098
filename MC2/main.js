@@ -8,7 +8,6 @@ const MIN_LAT = 36.04802098;
 const DIFFLONG = (MAX_LONG - MIN_LONG) * 1000;
 const DIFFLAT = (MAX_LAT - MIN_LAT) * 1000;
 
-
 const MAPX= image_width/DIFFLAT;
 const MAPY= image_height/DIFFLONG;
 
@@ -201,250 +200,26 @@ function drawGPSPoints() {
 
 function daySlider() {
 
-    const svg = d3.select("svg"),
-    margin = { top: 20, right: 0, bottom: 30, left: 0 },
-    width = +svg.attr("width") - margin.left - margin.right,
-    height = +svg.attr("height") - margin.top - margin.bottom;
+    var slider = document.getElementById("myRange");
+    var output = document.getElementById("demo");
+    output.innerHTML = new Date(used_year, used_month, slider.value); // Display the default slider value
 
-    const x = d3
-    .scaleTime()
-    .domain([data_start_date, data_end_date])
-    .range([0, width]);
-
-    const xAxis = d3.axisBottom(x);
-
-    const brush = d3
-    .brushX()
-    .extent([
-        [0, 0],
-        [width, height]
-    ])
-    .on("brush end", brushed);
-
-    const context = svg
-    .append("g")
-    .attr("class", "context")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    context
-    .append("g")
-    .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
-
-    context
-    .append("g")
-    .attr("class", "brush")
-    .call(brush)
-    .call(brush.move, x.range());
-
-    function brushed() {
-        const s = d3.event.selection || x.range();
-        const timeSelection = s.map(x.invert, x);
-
-        //append timeframe
-        document.getElementById("start").innerHTML = timeSelection[0];
-        document.getElementById("end").innerHTML = timeSelection[1];
-        console.log(s.map(x.invert, x));
-    }
-
-
-    /*const svg = d3.select("#timeline"),
-    margin = { top: 20, right: 0, bottom: 30, left: 10 },
-    width3 = +svg.attr("width") - margin.left - margin.right,
-    height3 = +svg.attr("height") - margin.top - margin.bottom;
-
-    const x = d3
-    .scaleTime()
-    .domain([data_start_date, data_end_date-1])
-    .range([0, width3]);
-
-    const xAxis = d3.axisBottom(x);
-
-    const derrive = 780 / (used_max-used_min);
-    const chosenMin = (used_min-used_min)*derrive;
-    const chosenMax = (used_max-used_min)*derrive;
-    var chosenDay = 6;
-
-    svg.innerHTML = chosenMin;
-
-    console.log("innerHTML: ", svg.innerHTML);
-
-    const context = svg.append("g")
-    .attr("class", "context")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-    context.append("g")
-    .attr("class", "axis axis--x")
-    .attr("transform", "translate(0," + height3 + ")")
-    .call(xAxis);
-
-    /*context.append("g")
-    .attr("class", "brush")
-    .call(brush)
-    .call(brush.move, x.range());*/
-
-    /*const handle = svg.append("circle")
-    .attr("r", 9)
-    .attr("cx", margin.left)
-    .attr("cy", margin.top)
-    .call(d3.drag().on("drag",  handleDrag).on("end", updateValues));
-
-    let handleValue = used_min;
-    updateHandle();
-
-    // Handle behaviour when dragged 
-    function handleDrag() {
-        handleValue = Math.max(chosenMin, Math.min(chosenMax, d3.event.x));
-        updateHandle();
-    }
-
-    // Update the position of the handle on the slider
-    function updateHandle() {
-        handle.attr("cx", handleValue+5);
-        chosenDay = Math.round((handleValue/derrive)+chosenMin);
-        start_date.setDate(chosenDay);
-        end_date.setDate(chosenDay);
-        svg.innerHTML = chosenDay;
-        svg.style.left = handleValue + "px";
-        
-        console.log('update handle');
-    }
-
-    
-
-    /*function brushed() {
-    const s = d3.event.selection || x.range();
-    const timeSelection = s.map(x.invert, x);
-
-    //append timeframe
-    document.getElementById("start").innerHTML = timeSelection[0];
-    document.getElementById("end").innerHTML = timeSelection[1];
-    console.log(s.map(x.invert, x));
-    }*/
-
-    function updateValues(){
-        getFilterData(start_date, end_date);
-        console.log("updated dates");
+    // Update the current slider value (each time you drag the slider handle)
+    slider.oninput = function() {
+        var value = this.value;
+        output.innerHTML = new Date(used_year, used_month, value);
+   
     }
     
-        
-
-    // Gammal slider, typ funkar men uppdaterar konstigt. 
-    /*var lowerSlider = document.querySelector('#lower_date'),
-    upperSlider = document.querySelector('#upper_date'),
-    lowerVal = parseInt(lowerSlider.value),
-    upperVal = parseInt(upperSlider.value),
-    lowerSlider_time = document.querySelector('#lower_time'),
-    upperSlider_time = document.querySelector('#upper_time'),
-    lowerVal_time = parseInt(lowerSlider_time.value),
-    upperVal_time = parseInt(upperSlider_time.value);
-
-    console.log("lowerVal: ", lowerVal);
-    console.log("upperVal: ", upperVal);
-    console.log("lowerVal_time: ", lowerVal_time);
-    console.log("upperVal_time: ", upperVal_time);
-
-    upperSlider.oninput = function() {
-        lowerVal = parseInt(lowerSlider.value);
-        upperVal = parseInt(upperSlider.value);
-        
-        if (upperVal < lowerVal + 2) {
-            lowerSlider.value = upperVal - 2;
-            
-            if (lowerVal == lowerSlider.min) {
-                upperSlider.value = 2;
-            }
-        }
-        
-        var lower_date = new Date(used_year, used_month, lowerVal, lowerVal_time);
-        var upper_date = new Date(used_year, used_month, upperVal, upperVal_time);
-        console.log("lower_date: ", lower_date);
-        console.log("upper_date: ", upper_date);
-
+    // Update the data when finished sliding
+    slider.onchange = function() {
+        console.log(this.value);
+        var lower_date = new Date(used_year, used_month, this.value, 0.0);
+        var upper_date = new Date(used_year, used_month, this.value, 23,59);
         getFilterData(lower_date, upper_date);
+        console.log("updated filtred data");
+    }
 
-        console.log('update upper date');
-        
-    };
-
-    
-
-
-    lowerSlider.oninput = function() {
-        lowerVal = parseInt(lowerSlider.value);
-        upperVal = parseInt(upperSlider.value);
-        
-        if (lowerVal > upperVal - 2) {
-            upperSlider.value = lowerVal + 2;
-            
-            if (upperVal == upperSlider.max) {
-                lowerSlider.value = parseInt(upperSlider.max) - 2;
-            }
-
-        }
-
-        var lower_date = new Date(used_year, used_month, lowerVal, lowerVal_time);
-        var upper_date = new Date(used_year, used_month, upperVal, upperVal_time);
-
-        console.log("lower_date: ", lower_date);
-        console.log("upper_date: ", upper_date);
-        
-        getFilterData(lower_date, upper_date);
-
-        console.log('update lower date');
-        
-    };
-
-    upperSlider_time.oninput = function() {
-        lowerVal_time = parseInt(lowerSlider_time.value);
-        upperVal_time = parseInt(upperSlider_time.value);
-        
-        if (upperVal_time < lowerVal_time + 2) {
-            lowerSlider_time.value = upperVal_time - 2;
-            
-            if (lowerVal_time == lowerSlider_time.min) {
-                upperSlider_time.value = 2;
-            }
-        }
-        
-        var lower_date = new Date(used_year, used_month, lowerVal, lowerVal_time);
-        var upper_date = new Date(used_year, used_month, upperVal, upperVal_time);
-        console.log("lower_date: ", lower_date);
-        console.log("upper_date: ", upper_date);
-
-        getFilterData(lower_date, upper_date);
-
-        console.log('update upper time');
-        
-    };
-
-    lowerSlider_time.oninput = function() {
-        lowerVal_time = parseInt(lowerSlider_time.value);
-        upperVal_time = parseInt(upperSlider_time.value);
-        
-        if (upperVal_time < lowerVal_time + 2) {
-            lowerSlider_time.value = upperVal_time - 2;
-            
-            if (lowerVal_time == lowerSlider_time.min) {
-                upperSlider_time.value = 2;
-            }
-        }
-        
-        var lower_date = new Date(used_year, used_month, lowerVal, lowerVal_time);
-        var upper_date = new Date(used_year, used_month, upperVal, upperVal_time);
-        console.log("lower_date: ", lower_date);
-        console.log("upper_date: ", upper_date);
-
-        getFilterData(lower_date, upper_date);
-
-        console.log('update lower date');
-        
-    };
-
-    //document.getElementById('map').appendChild(slider)
-
-    console.log('finsihed daySlider');*/
 }
 
 

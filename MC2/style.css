@@ -23,135 +23,44 @@
     left: 0;
 }
 
-body {
-    padding: 4em;
-    background-color: #333;
- }
- 
- input[type="range"] {
-    box-sizing: border-box;
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+}
+  
+/* The slider itself */
+    .slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
     appearance: none;
-    width: 400px;
-    margin: 0;
-    padding: 0 2px;
-    /* Add some L/R padding to ensure box shadow of handle is shown */
-    overflow: hidden;
-    border: 0;
-    border-radius: 1px;
-    outline: none;
-    background: linear-gradient(grey, grey) no-repeat center;
-    /* Use a linear gradient to generate only the 2px height background */
-    background-size: 100% 2px;
-    pointer-events: none;
- 
-    &:active,
-    &:focus {
-       outline: none;
-    }
- 
-    &::-webkit-slider-thumb {
-       height: 28px;
-       width: 28px;
-       border-radius: 28px;
-       /*background-color: #fff;*/
-       position: relative;
-       margin: 5px 0;
-       /* Add some margin to ensure box shadow is shown */
-       cursor: pointer;
-       appearance: none;
-       pointer-events: all;
-       box-shadow: 0 1px 4px 0.5px rgba(0, 0, 0, 0.25);
-       &::before {
-          content: " ";
-          display: block;
-          position: absolute;
-          top: 13px;
-          left: 100%;
-          width: 2000px;
-          height: 2px;
-       }
-    }
- }
- 
- .multi-range {
-    /*position: relative;*/
-    height: 50px;
-    display:block;
+    width: 100%; /* Full-width */
+    height: 25px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+  
+/* Mouse-over effects */
+.slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+}
 
- }
+/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #04AA6D; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
 
- #upper_date {
-    &::-webkit-slider-thumb {
-        background-color: blue;
-    }
- }
-
- #lower_date {
-    &::-webkit-slider-thumb {
-        background-color: red;
-    }
- }
-
- #upper_time {
-    &::-webkit-slider-thumb {
-        background-color: green;
-    }
- }
-
- #lower_time {
-    &::-webkit-slider-thumb {
-        background-color: yellow;
-    }
- }
-
- 
- input[type="range"] {
-    position: absolute;
-
-    &:nth-child(1) {
-       &::-webkit-slider-thumb::before {
-          background-color: red;
-       }
-    }
-
-    &:nth-child(2) {
-       background: none;
-
-       &::-webkit-slider-thumb::before {
-          background-color: grey;
-       }
-    }
- }
-
-/*#timeline {
-    .domain {
-        stroke: #333333;
-    }
-    .tick {
-        line {
-            stroke: #828181;
-        }
-        text {
-            fill: #828181;
-        }
-    };
-    .handle {
-        fill: #A9E806;
-    }
-    .selection {
-        fill: #A9E806;
-        fill-opacity: 1;
-        stroke: none;
-    }
-    
-    .start-date, .end-date {
-    label {
-        color: #828181;
-    }
-    color: #fff;
-    }  
-}*/
-
+.slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #04AA6D; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+}
 
   
 svg .domain {
