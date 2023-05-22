@@ -62,8 +62,11 @@ var rangeRound = Math.round((data_end_date.getTime() - data_start_date.getTime()
 // Get weekday in text
 var days_text = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-//console.log(data_start_date);
-//console.log(data_end_date);
+
+var chosen_id = [];
+
+console.log(data_start_date);
+console.log(data_end_date);
 
 // Tooltip style
 let tooltip = d3.select("body")
@@ -81,7 +84,7 @@ let tooltip = d3.select("body")
 
 getData().then((output) => {
     // Filter the data after getting the data from the files 
-    getFilterData(start_date, end_date);
+    getFilterData(start_date, end_date, chosen_id);
 
     //console.log('finished loading data');
 });
@@ -98,6 +101,7 @@ async function getData() {
         // CALL CREATE SLIDER FUNCTIONS HERE
         daySlider();
         timeSlider();
+        carCheckBoxes();
 
     } catch (error) {
         // Handle error
@@ -109,16 +113,25 @@ function getFilterData(start_date, end_date, id){
     //console.log(new Date(gps_data[0].Timestamp));
     //console.log(car_data[0]);'
 
-    //console.log("chosen start date: ", start_date);
-    //console.log("chosen end date: ", end_date)
+    console.log("chosen start date: ", start_date);
+    console.log("chosen end date: ", end_date)
+    console.log("chosen id: ", id);
 
     filtered_gps_data = gps_data.filter((data) => {
         const temp_date = new Date(data.Timestamp).getTime();
 
-        /*if(id == 0){
-            return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
+        /*if(id.length == 0){
+            return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime()); 
         } else {
-            return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime() && data.id == id);
+
+            var temp = [];
+            
+            id.forEach(e => {
+                temp.push(temp_date >= start_date.getTime() && temp_date <= new Date(end_date).getTime() && e == id);
+            });
+
+            return temp;
+            
         }*/
 
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
@@ -159,7 +172,7 @@ function drawGPSPoints() {
     d3.selectAll("rect").remove();
 
     svg.selectAll("rect")
-        .data(filtered_gps_data)
+        .data(filtred_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0}))
         .enter()
         .append("rect")
         .attr("x", d =>(d.long-MIN_LONG)*1000*MAPY*1.72+10)
@@ -288,8 +301,8 @@ function daySlider() {
         var upper_date = new Date(used_year, used_month, this.value, end_time,0);
         start_date = lower_date;
         end_date = upper_date;
-        getFilterData(lower_date, upper_date);
-        //console.log("updated filtred data");
+        getFilterData(lower_date, upper_date, chosen_id);
+        console.log("updated filtred data");
     }
 
 }
@@ -326,8 +339,8 @@ function timeSlider() {
         start_time = this.value;
         start_date = lower_date;
         end_date = upper_date;
-        getFilterData(lower_date, upper_date);
-        //console.log("updated filtred data");
+        getFilterData(lower_date, upper_date, chosen_id);
+        console.log("updated filtred data");
     }
 
     // Update the data when finished sliding
@@ -339,14 +352,57 @@ function timeSlider() {
         end_time = this.value;
         start_date = lower_date;
         end_date = upper_date;
-        getFilterData(lower_date, upper_date);
-        //console.log("updated filtred data");
+        getFilterData(lower_date, upper_date, chosen_id);
+        console.log("updated filtred data");
     }
     
 }
 
-function storeCoords(name){
 
+function carCheckBoxes() {
+    var checkbox_container = document.getElementById("checkbox-container");
+
+    var checked_ids = [];
+
+    car_data.forEach(d => {
+        var div_item = document.createElement("span");
+        div_item.className = "carCheckbox";
+
+        var label_item = document.createElement("label");
+        label_item.for = d.CarID;
+        label_item.innerHTML = d.CarID;
+
+        var input_item = document.createElement("input");
+        input_item.id = d.CarID;
+        input_item.type = "checkbox";
+        input_item.value = d.CarID;
+        input_item.onclick = updateId;
+
+        label_item.appendChild(input_item);
+        div_item.appendChild(label_item);
+        checkbox_container.appendChild(div_item);
+        
+    });
+
+    function updateId(e) {
+        var id = this.value;
+
+
+        if(this.checked == true){
+            //console.log(id + " checked");
+            checked_ids.push(id); // if checked add to checked_ids that is used later in drawing the gps points
+        } else {
+            //console.log(id + " unchecked");
+            checked_ids.pop(id);
+        }
+
+        chosen_id = checked_ids; // replace array with new array with ids
+        drawGPSPoints();
+
+    }
+}
+
+function storeCoords(name){
     if(name == "Brew've Been Served"){
         return [24.878464, 36.07592]
     }
