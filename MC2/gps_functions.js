@@ -38,12 +38,19 @@ function drawGPSPoints() {
 }
 
 function carCheckBoxes() {
-    var checkbox_container = document.getElementById("checkbox-container");
+    var map_container = document.getElementById("map");
+
+    var checkbox_container = document.createElement("div");
+    checkbox_container.innerHTML = "Name : Card ID";
+    checkbox_container.id = "checkbox-container";
+    checkbox_container.className = "checkbox-dropdown";
+
+    var ul_item = document.createElement("ul");
+    ul_item.className = "checkbox-dropdown-list";
 
     var checked_ids = [];
-
     car_data.forEach(d => {
-        var div_item = document.createElement("span");
+        var div_item = document.createElement("li");
         div_item.className = "carCheckbox";
 
         var label_item = document.createElement("label");
@@ -55,16 +62,18 @@ function carCheckBoxes() {
         input_item.type = "checkbox";
         input_item.value = d.CarID;
         input_item.onclick = updateId;
-
+        
         label_item.appendChild(input_item);
         div_item.appendChild(label_item);
-        checkbox_container.appendChild(div_item);
+        ul_item.appendChild(div_item);
         
     });
 
+    checkbox_container.appendChild(ul_item)
+    map_container.appendChild(checkbox_container);
+
     function updateId(e) {
         var id = this.value;
-
 
         if(this.checked == true){
             //console.log(id + " checked");
@@ -78,4 +87,14 @@ function carCheckBoxes() {
         drawGPSPoints();
 
     }
+
+    
+    $(".checkbox-dropdown").click(function () {
+        $(this).toggleClass("is-active");
+    });
+    
+    $(".checkbox-dropdown ul").click(function(e) {
+        e.stopPropagation();
+    });
+
 }
