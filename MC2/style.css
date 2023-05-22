@@ -98,3 +98,7 @@ svg .selection {
     position: relative;
     
 }
+
+.carCheckbox {
+    margin: 5px 10px;
+}
