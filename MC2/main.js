@@ -169,10 +169,10 @@ function drawGPSPoints() {
         .attr("id", "gpsMap")
         .append("g");
 
-    d3.selectAll("rect").remove();
+    d3.selectAll("rect").remove(); // remove old data points
 
     svg.selectAll("rect")
-        .data(filtred_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0}))
+        .data(filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0}))
         .enter()
         .append("rect")
         .attr("x", d =>(d.long-MIN_LONG)*1000*MAPY*1.72+10)
@@ -359,7 +359,7 @@ function carCheckBoxes() {
 
         var label_item = document.createElement("label");
         label_item.for = d.CarID;
-        label_item.innerHTML = d.CarID;
+        label_item.innerHTML = d.FirstName + " " + d.LastName + " : " + d.CarID;
 
         var input_item = document.createElement("input");
         input_item.id = d.CarID;
