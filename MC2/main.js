@@ -33,7 +33,7 @@ var card_data = [];
 var loyalty_data = [];
 var car_data = [];
 var gps_data = [];
-var filtred_data = [];
+var filtered_data = [];
 var filtered_gps_data = [];
 var filtered_cc_data = [];
 
@@ -172,7 +172,7 @@ function drawGPSPoints() {
     d3.selectAll("rect").remove();
 
     svg.selectAll("rect")
-        .data(filtred_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0}))
+        .data(filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0}))
         .enter()
         .append("rect")
         .attr("x", d =>(d.long-MIN_LONG)*1000*MAPY*1.72+10)
@@ -218,6 +218,8 @@ function drawCCPoints(){
         .append("g");
 
     var rad = 10
+
+    d3.selectAll('circle').remove();
     
 
     for(var i = 0; i < stores.size; i++){
@@ -228,7 +230,7 @@ function drawCCPoints(){
 
         var coords = storeCoords(Array.from(stores)[i])
 
-        createSimulation(nodes, coords, last4);
+        //createSimulation(nodes, coords, last4);
 
         var simulation = d3.forceSimulation(nodes)
         .force('charge', d3.forceManyBody().strength(5))
@@ -238,7 +240,7 @@ function drawCCPoints(){
         }))
         .on('tick', ticked)
 
-        d3.selectAll('circle').remove();
+        
 
         function ticked(){
             svg.selectAll('circle')
@@ -302,7 +304,7 @@ function daySlider() {
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtred data");
+        console.log("updated filtered data");
     }
 
 }
@@ -340,7 +342,7 @@ function timeSlider() {
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtred data");
+        console.log("updated filtered data");
     }
 
     // Update the data when finished sliding
@@ -353,7 +355,7 @@ function timeSlider() {
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtred data");
+        console.log("updated filtered data");
     }
     
 }
