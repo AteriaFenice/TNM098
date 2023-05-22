@@ -62,8 +62,8 @@ var rangeRound = Math.round((data_end_date.getTime() - data_start_date.getTime()
 // Get weekday in text
 var days_text = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-console.log(data_start_date);
-console.log(data_end_date);
+//console.log(data_start_date);
+//console.log(data_end_date);
 
 // Tooltip style
 let tooltip = d3.select("body")
@@ -83,7 +83,7 @@ getData().then((output) => {
     // Filter the data after getting the data from the files 
     getFilterData(start_date, end_date);
 
-    console.log('finished loading data');
+    //console.log('finished loading data');
 });
 
 async function getData() {
@@ -93,7 +93,7 @@ async function getData() {
         gps_data = await d3.csv('MC2/gps.csv');
         card_data = await d3.csv('MC2/cc_data.csv');
 
-        console.log(gps_data.length);
+        //console.log(gps_data.length);
 
         // CALL CREATE SLIDER FUNCTIONS HERE
         daySlider();
@@ -109,8 +109,8 @@ function getFilterData(start_date, end_date, id){
     //console.log(new Date(gps_data[0].Timestamp));
     //console.log(car_data[0]);'
 
-    console.log("chosen start date: ", start_date);
-    console.log("chosen end date: ", end_date)
+    //console.log("chosen start date: ", start_date);
+    //console.log("chosen end date: ", end_date)
 
     filtered_gps_data = gps_data.filter((data) => {
         const temp_date = new Date(data.Timestamp).getTime();
@@ -130,8 +130,8 @@ function getFilterData(start_date, end_date, id){
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
     });
 
-    console.log(filtered_gps_data.length);
-    console.log(filtered_cc_data.length);
+    //console.log(filtered_gps_data.length);
+    console.log('nr of nodes: ',filtered_cc_data.length);
 
     // CALL DRAW DATA POINTS HERE
     drawGPSPoints();
@@ -145,7 +145,7 @@ function unique(iterable) {
 
 function drawGPSPoints() {
 
-    console.log('drawingGPSPoints function called')
+    //console.log('drawingGPSPoints function called')
 
     var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);
 
@@ -179,18 +179,21 @@ function drawGPSPoints() {
             return tooltip.style("visibility", "hidden");
         });
 
-        console.log('gps data points drawn');
+        //console.log('gps data points drawn');
 }
 
 function drawCCPoints(){
-    console.log('drawCCPoints function called')
 
-    // get all unique card numbers
-    var temp = []
+    // get all unique card numbers and stores
+    var ccnum = []
+    var store = []
+
     for(var i = 0; i < card_data.length; i++){
-        temp[i] = card_data[i].last4ccnum
+        ccnum[i] = card_data[i].last4ccnum
+        store[i] = card_data[i].location
     }
-    var last4 = unique(temp)
+    var last4 = unique(ccnum)
+    var stores = unique(store)
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
     
@@ -201,58 +204,65 @@ function drawCCPoints(){
         .attr("id", "gpsMap")
         .append("g");
 
-    // get all stores and locations
-    var nodes = filtered_cc_data.filter(function(d){
-        return d.location == 'Kronos Mart';
-    })
-
     var rad = 10
-    var long = 24.84842
-    var lat = 36.06722
+    
 
-    var simulation = d3.forceSimulation(nodes)
-    .force('charge', d3.forceManyBody().strength(5))
-    .force('center', d3.forceCenter((long-MIN_LONG)*1000*MAPY*1.72+10, (image_width+50)/2-(lat-MIN_LAT)*1000*MAPX*0.47))
-    .force('collision', d3.forceCollide().radius(function(d){
-        return rad//d.price /10
-    }))
-    .on('tick', ticked)
+    for(var i = 0; i < stores.size; i++){
+        var nodes = filtered_cc_data.filter(function(d){
+            return d.location == Array.from(stores)[i];
+        })
+        console.log('nodes of '+ Array.from(stores)[i] +': ', nodes)
 
-    d3.selectAll('circle').remove();
+        var coords = storeCoords(Array.from(stores)[i])
 
-    function ticked(){
-        svg.selectAll('circle')
-        .data(nodes)
-        .join('circle')
-        .attr('r', function(d){
-            //return d.price /10
-            return rad
-        })
-        .attr('fill', function(d){
-            return myColor(Array.from(last4).indexOf(d.last4ccnum))
-        })
-        .attr('fill-opacity', 0.5)
-        .attr('stroke', function(d){
-            return myColor(Array.from(last4).indexOf(d.last4ccnum))
-        })
-        .attr('cx', function(d){
-            return d.x
-        })
-        .attr('cy', function(d){
-            return d.y
-        })
-        .on("mouseover", function() {
-            return tooltip.style("visibility", "visible");
-        })
-        .on("mousemove", function(d, i) {
-            tooltip.text('Price: ' + i.price + ' \nTime: ' + i.timestamp);
-            return tooltip.style("top",
-                (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
-        })
-        .on("mouseout", function() {
-            return tooltip.style("visibility", "hidden");
-        })
-        //console.log('CC points drawn')
+        createSimulation(nodes, coords, last4);
+
+        var simulation = d3.forceSimulation(nodes)
+        .force('charge', d3.forceManyBody().strength(5))
+        .force('center', d3.forceCenter((coords[0]-MIN_LONG)*1000*MAPY*1.72+10, (image_width+50)/2-(coords[1]-MIN_LAT)*1000*MAPX*0.47))
+        .force('collision', d3.forceCollide().radius(function(d){
+            return rad//d.price /10
+        }))
+        .on('tick', ticked)
+
+        d3.selectAll('circle').remove();
+
+        function ticked(){
+            svg.selectAll('circle')
+            .data(nodes)
+            .join('circle')
+            .attr('r', function(d){
+                //return d.price /10
+                return rad
+            })
+            .attr('fill', function(d){
+                return myColor(Array.from(last4).indexOf(d.last4ccnum))
+            })
+            .attr('fill-opacity', 0.5)
+            .attr('stroke', function(d){
+                return myColor(Array.from(last4).indexOf(d.last4ccnum))
+            })
+            .attr('cx', function(d){
+                return d.x
+            })
+            .attr('cy', function(d){
+                return d.y
+            })
+            .on("mouseover", function() {
+                return tooltip.style("visibility", "visible");
+            })
+            .on("mousemove", function(d, i) {
+                tooltip.text('Price: ' + i.price + ' \nTime: ' + i.timestamp);
+                return tooltip.style("top",
+                    (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
+            })
+            .on("mouseout", function() {
+                return tooltip.style("visibility", "hidden");
+            })
+            //console.log('CC points drawn')
+        }
+
+    
     }
 };
 
@@ -273,13 +283,13 @@ function daySlider() {
     
     // Update the data when finished sliding
     slider.onchange = function() {
-        console.log(this.value);
+        //console.log(this.value);
         var lower_date = new Date(used_year, used_month, this.value, start_time,0);
         var upper_date = new Date(used_year, used_month, this.value, end_time,0);
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date);
-        console.log("updated filtred data");
+        //console.log("updated filtred data");
     }
 
 }
@@ -306,41 +316,178 @@ function timeSlider() {
 
     // Update the data when finished sliding
     slider_lower.onchange = function() {
-        console.log(this.value);
+        //console.log(this.value);
         var lower_date = new Date(used_year, used_month, start_date.getDate(), this.value, 0);
         var upper_date = new Date(used_year, used_month, end_date.getDate(), slider_upper.value, 0);
         
-        console.log('lower_date: ', lower_date);
-        console.log('higher_date: ', upper_date);
+        //console.log('lower_date: ', lower_date);
+        //console.log('higher_date: ', upper_date);
 
         start_time = this.value;
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date);
-        console.log("updated filtred data");
+        //console.log("updated filtred data");
     }
 
     // Update the data when finished sliding
     slider_upper.onchange = function() {
-        console.log(this.value);
-        console.log(slider_lower.value);
+        //console.log(this.value);
+        //console.log(slider_lower.value);
         var lower_date = new Date(used_year, used_month, start_date.getDate(), slider_lower.value,0);
         var upper_date = new Date(used_year, used_month, end_date.getDate(), this.value,0);
         end_time = this.value;
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date);
-        console.log("updated filtred data");
+        //console.log("updated filtred data");
     }
     
 }
 
+function storeCoords(name){
 
+    if(name == "Brew've Been Served"){
+        return [24.878464, 36.07592]
+    }
+    
+    if(name == 'Hallowed Grounds'){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == 'Coffee Cameleon'){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == 'Abila Airport'){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Kronos Pipe and Irrigation"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Nationwide Refinery"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Maximum Iron and Steel"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Stewart and Sons Fabrication"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Carlyle Chemical Inc."){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Coffee Shack"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Bean There Done That"){
+        return [24.850243, 36.082679] // correct
+    }
+
+    if(name == "Brewed Awakenings"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Jack's Magical Beans"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Katerina�s Caf�"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Hippokampos"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Abila Zacharo"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Gelatogalore"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Kalami Kafenion"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Ouzeri Elian"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Guy's Gyros"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "U-Pump"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Frydos Autosupply n' More"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Albert's Fine Clothing"){
+        return [24.85711, 36.07667] // correct
+    }
+
+    if(name == "Shoppers' Delight"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Abila Scrapyard"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Frank's Fuel"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Chostus Hotel"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "General Grocer"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Kronos Mart"){
+        return [24.84842, 36.06722] // correct
+    }
+
+    if(name == "Octavio's Office Supplies"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Roberts and Sons"){
+        return [24.852019, 36.06342] // correct
+    }
+
+    if(name == 'Ahaggo Museum'){
+        return [24.878464, 36.07592] // correct
+    }
+
+    if(name == "Desafio Golf Course"){
+        return [24.878464, 36.07592]
+    }
+
+    if(name == "Daily Dealz"){
+        return [24.878464, 36.07592]
+    }
+    
+}
 /* 
 Ahaggo Museum: long, lat: [24.878464, 36.07592]
 Kronos Mart: long, lat: [24.84842, 36.06722]
 Bean There Done That: long, lat: [24.850243, 36.082679]
-Carnero Street: long, lat: [24.85899, 36.08413]
 Alberts Fine Clothing: long, lat: [24.85711, 36.07667]
 Roberts and Sons: long, lat: [24.852019, 36.06342]
 Abila Hospital: long, lat: [24.879302, 36.055626]
