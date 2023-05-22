@@ -8,7 +8,6 @@
     <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
-    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script src="https://unpkg.com/d3-force-cluster@latest"></script><!--not working-->
     <script type='module' src="main.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -18,4 +17,27 @@
 
 <body>
     <div id="map"></div>
+    <div id="slider-container">
+       <!-- <div id="day">
+            <span class="multi-range">
+                <input type="range" min="6" max="18" value="6" id="lower_date">
+                <input type="range" min="7" max="19" value="8" id="upper_date">
+            </span>
+        </div>
+        <div id="time">
+            <span class="multi-range">
+                <input type="range" min="0" max="23" value="6" id="lower_time">
+                <input type="range" min="1" max="24" value="8" id="upper_time">
+            </span>
+        </div>-->
+        <svg width="800", height="52", id="timeline"></svg>
+        <div class="start-date">
+            <label>Starting Date: </label>
+            <div id="start"></div>
+        </div>
+        <div class="end-date">
+            <label>Ending Date: </label>
+            <div id="end"></div>
+        </div>
+    </div>
 </body>
