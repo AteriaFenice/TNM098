@@ -64,8 +64,8 @@ var days_text = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 var chosen_id = [];
 
-console.log(data_start_date);
-console.log(data_end_date);
+//console.log(data_start_date);
+//console.log(data_end_date);
 
 // Tooltip style
 let tooltip = d3.select("body")
@@ -85,7 +85,7 @@ getData().then((output) => {
     // Filter the data after getting the data from the files 
     getFilterData(start_date, end_date, chosen_id);
 
-    console.log('finished loading data');
+    //console.log('finished loading data');
 });
 
 async function getData() {
@@ -95,7 +95,7 @@ async function getData() {
         gps_data = await d3.csv('MC2/gps.csv');
         card_data = await d3.csv('MC2/cc_data.csv');
 
-        console.log(gps_data.length);
+        //console.log(gps_data.length);
 
         // CALL CREATE SLIDER FUNCTIONS HERE
         daySlider();
@@ -112,9 +112,9 @@ function getFilterData(start_date, end_date, id){
     //console.log(new Date(gps_data[0].Timestamp));
     //console.log(car_data[0]);'
 
-    console.log("chosen start date: ", start_date);
-    console.log("chosen end date: ", end_date)
-    console.log("chosen id: ", id);
+    //console.log("chosen start date: ", start_date);
+    //console.log("chosen end date: ", end_date)
+    //console.log("chosen id: ", id);
 
     filtered_gps_data = gps_data.filter((data) => {
         const temp_date = new Date(data.Timestamp).getTime();
@@ -142,7 +142,7 @@ function getFilterData(start_date, end_date, id){
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
     });
 
-    console.log(filtered_gps_data.length);
+    //console.log(filtered_gps_data.length);
     console.log(filtered_cc_data.length);
 
     // CALL DRAW DATA POINTS HERE
@@ -154,17 +154,3 @@ function getFilterData(start_date, end_date, id){
 function unique(iterable) {
     return new Set(iterable);
 }
-
-
-
-/* 
-Ahaggo Museum: long, lat: [24.878464, 36.07592]
-Kronos Mart: long, lat: [24.84842, 36.06722]
-Bean There Done That: long, lat: [24.850243, 36.082679]
-Carnero Street: long, lat: [24.85899, 36.08413]
-Alberts Fine Clothing: long, lat: [24.85711, 36.07667]
-Roberts and Sons: long, lat: [24.852019, 36.06342]
-Abila Hospital: long, lat: [24.879302, 36.055626]
-
-
-*/

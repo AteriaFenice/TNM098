@@ -1,6 +1,6 @@
 function drawGPSPoints() {
 
-    console.log('drawingGPSPoints function called')
+    //console.log('drawingGPSPoints function called')
 
     var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);
 
@@ -34,7 +34,7 @@ function drawGPSPoints() {
             return tooltip.style("visibility", "hidden");
         });
 
-        console.log('gps data points drawn');
+        //console.log('gps data points drawn');
 }
 
 function carCheckBoxes() {
