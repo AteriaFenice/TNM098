@@ -13,31 +13,35 @@ function drawCCPoints(){
     var stores = unique(store)
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
-    
-    var rad = 5
-
-    d3.selectAll('circle').remove();
+    var rad = 10
     var nodes = 0;
-    //var allNodes = 0
+    d3.selectAll('circle').remove();
 
-    
     const svg = d3.select("#map")
-    .append("svg")
-    .attr("width", image_width)
-    .attr("height", image_height)
-    .attr("id", i)
-    .attr('class', 'simulations')
-    .append("g");
+        .append("svg")
+        .attr("width", image_width)
+        .attr("height", image_height)
+        .attr("id", i)
+        .attr('class', 'simulations')
+        .append("g");
 
-    
+    d3.selectAll("svg", '.simulations').remove()
 
-    for(var i = 0; i < 12; i++){
+
+    for(var i = 0; i < stores.size; i++){
+
+        const svg = d3.select("#map")
+        .append("svg")
+        .attr("width", image_width)
+        .attr("height", image_height)
+        .attr("id", i)
+        .attr('class', 'simulations')
+        .append("g");
 
         var nodes = filtered_cc_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
-
-        console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
+        //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
 
         var coords = storeCoords(Array.from(stores)[i])
 
@@ -49,10 +53,9 @@ function drawCCPoints(){
         .force('collision', d3.forceCollide().radius(function(d){
             return rad//d.price /10
         }))
-        .on('tick', ticked)
 
-        //allNodes = allNodes + nodes
-        //console.log(allNodes)
+        simulation.tick()
+        ticked()
 
         function ticked(){
             svg.selectAll('circle')
@@ -86,11 +89,6 @@ function drawCCPoints(){
             .on("mouseout", function() {
                 return tooltip.style("visibility", "hidden");
             })
-            //console.log('CC points drawn')
-    
         }
-
     }
-
-    
 };
