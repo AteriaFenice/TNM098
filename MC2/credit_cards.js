@@ -17,7 +17,18 @@ function drawCCPoints(){
     var nodes = 0;
     d3.selectAll('circle').remove();
 
-    for(var i = 0; i < 12; i++){
+    const svg = d3.select("#map")
+        .append("svg")
+        .attr("width", image_width)
+        .attr("height", image_height)
+        .attr("id", i)
+        .attr('class', 'simulations')
+        .append("g");
+
+    d3.selectAll("svg", '.simulations').remove()
+
+
+    for(var i = 0; i < stores.size; i++){
 
         const svg = d3.select("#map")
         .append("svg")
