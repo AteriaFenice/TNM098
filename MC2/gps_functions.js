@@ -62,7 +62,7 @@ function carCheckBoxes() {
         input_item.type = "checkbox";
         input_item.value = d.CarID;
         input_item.onclick = updateId;
-        
+
         label_item.appendChild(input_item);
         div_item.appendChild(label_item);
         ul_item.appendChild(div_item);
@@ -96,5 +96,16 @@ function carCheckBoxes() {
     $(".checkbox-dropdown ul").click(function(e) {
         e.stopPropagation();
     });
+
+}
+
+function changeMenuColor() {
+    var car_menu = document.getElementById("checkbox-container");
+    
+    car_data.forEach( c => {
+        if (filtered_gps_data.includes(c.CarID)) {
+            console.log(filtered_gps_data.includes(c.CarID))
+        }
+    })
 
 }

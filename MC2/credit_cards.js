@@ -8,40 +8,35 @@ function drawCCPoints(){
         ccnum[i] = card_data[i].last4ccnum
         store[i] = card_data[i].location
     }
+
     var last4 = unique(ccnum)
     var stores = unique(store)
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
     
-    
-
-    var rad = 10
+    var rad = 5
 
     d3.selectAll('circle').remove();
     var nodes = 0;
     //var allNodes = 0
+
+    
+    const svg = d3.select("#map")
+    .append("svg")
+    .attr("width", image_width)
+    .attr("height", image_height)
+    .attr("id", i)
+    .attr('class', 'simulations')
+    .append("g");
+
     
 
     for(var i = 0; i < 12; i++){
 
-        //svg0 = 0
-
-        //var svg = 'svg'+ i
-        
-        
-        //console.log(eval(svg))
-
-        const svg = d3.select("#map")
-        .append("svg")
-        .attr("width", image_width)
-        .attr("height", image_height)
-        .attr("id", i)
-        .attr('class', 'simulations')
-        .append("g");
-
         var nodes = filtered_cc_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
+
         console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
 
         var coords = storeCoords(Array.from(stores)[i])
