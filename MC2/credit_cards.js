@@ -8,28 +8,16 @@ function drawCCPoints(){
         ccnum[i] = card_data[i].last4ccnum
         store[i] = card_data[i].location
     }
+
     var last4 = unique(ccnum)
     var stores = unique(store)
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
-    
-    
-
     var rad = 10
-
-    d3.selectAll('circle').remove();
     var nodes = 0;
-    //var allNodes = 0
-    
+    d3.selectAll('circle').remove();
 
     for(var i = 0; i < 12; i++){
-
-        //svg0 = 0
-
-        //var svg = 'svg'+ i
-        
-        
-        //console.log(eval(svg))
 
         const svg = d3.select("#map")
         .append("svg")
@@ -54,10 +42,9 @@ function drawCCPoints(){
         .force('collision', d3.forceCollide().radius(function(d){
             return rad//d.price /10
         }))
-        .on('tick', ticked)
 
-        //allNodes = allNodes + nodes
-        //console.log(allNodes)
+        simulation.tick()
+        ticked()
 
         function ticked(){
             svg.selectAll('circle')
@@ -91,11 +78,6 @@ function drawCCPoints(){
             .on("mouseout", function() {
                 return tooltip.style("visibility", "hidden");
             })
-            //console.log('CC points drawn')
-    
         }
-
     }
-
-    
 };
