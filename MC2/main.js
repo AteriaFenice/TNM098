@@ -148,6 +148,7 @@ function getFilterData(start_date, end_date, id){
     // CALL DRAW DATA POINTS HERE
     drawGPSPoints();
     drawCCPoints();
+    //storeCoords();
 
 }
 

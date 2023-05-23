@@ -35,7 +35,8 @@ function drawCCPoints(){
         .append("svg")
         .attr("width", image_width)
         .attr("height", image_height)
-        .attr("id", "gpsMap")
+        .attr("id", i)
+        .attr('class', 'simulations')
         .append("g");
 
         var nodes = filtered_cc_data.filter(function(d){

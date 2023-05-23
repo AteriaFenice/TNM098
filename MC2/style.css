@@ -23,6 +23,12 @@
     left: 0;
 }
 
+.simulations {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
 /*   ------------------- Slider -----------------------  */
 
 #slider-container {
