@@ -60,7 +60,7 @@ var data_end_date = new Date('2014-01-19T23:59:59');
 var rangeRound = Math.round((data_end_date.getTime() - data_start_date.getTime()) / day);
 
 // Get weekday in text
-var days_text = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+var days_text = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 var chosen_id = [];
 
