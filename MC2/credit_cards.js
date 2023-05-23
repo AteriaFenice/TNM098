@@ -13,23 +13,35 @@ function drawCCPoints(){
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
     
-    const svg = d3.select("#map")
+    
+
+    var rad = 10
+
+    d3.selectAll('circle').remove();
+    var nodes = 0;
+    //var allNodes = 0
+    
+
+    for(var i = 0; i < 12; i++){
+
+        //svg0 = 0
+
+        //var svg = 'svg'+ i
+        
+        
+        //console.log(eval(svg))
+
+        const svg = d3.select("#map")
         .append("svg")
         .attr("width", image_width)
         .attr("height", image_height)
         .attr("id", "gpsMap")
         .append("g");
 
-    var rad = 10
-
-    d3.selectAll('circle').remove();
-    
-
-    for(var i = 0; i < 12; i++){
         var nodes = filtered_cc_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
-        console.log('nodes of '+ Array.from(stores)[i] +': ', nodes)
+        console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
 
         var coords = storeCoords(Array.from(stores)[i])
 
@@ -43,7 +55,8 @@ function drawCCPoints(){
         }))
         .on('tick', ticked)
 
-        
+        //allNodes = allNodes + nodes
+        //console.log(allNodes)
 
         function ticked(){
             svg.selectAll('circle')
@@ -78,8 +91,10 @@ function drawCCPoints(){
                 return tooltip.style("visibility", "hidden");
             })
             //console.log('CC points drawn')
+    
         }
 
-    
     }
+
+    
 };
