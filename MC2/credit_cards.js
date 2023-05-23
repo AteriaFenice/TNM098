@@ -30,7 +30,7 @@ function drawCCPoints(){
         var nodes = filtered_cc_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
-        console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
+        //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
 
         var coords = storeCoords(Array.from(stores)[i])
 

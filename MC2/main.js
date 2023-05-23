@@ -143,7 +143,7 @@ function getFilterData(start_date, end_date, id){
     });
 
     //console.log(filtered_gps_data.length);
-    console.log(filtered_cc_data.length);
+    //console.log(filtered_cc_data.length);
 
     // CALL DRAW DATA POINTS HERE
     drawGPSPoints();
