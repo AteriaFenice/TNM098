@@ -11,7 +11,7 @@ function daySlider() {
     for (i = used_min; i <= used_max; i++) {
         var tick = document.createElement("span");
         tick.className = 'tick';
-        tick.innerHTML = i;
+        tick.innerHTML =  i;
         ticks.appendChild(tick);
     }
 
@@ -42,19 +42,32 @@ function timeSlider() {
     var slider_lower = document.getElementById("rangeTimeLower");
     var slider_upper = document.getElementById("rangeTimeUpper");
     var output = document.getElementById("timeText");
-    output.innerHTML = slider_lower.value + ":00-" + slider_upper.value + ":00"; // Display the default slider value
+    output.innerHTML = time_text(slider_lower.value) + " - " + time_text(slider_upper.value); // Display the default slider value
+
+    var ticks = document.createElement('div');
+    ticks.className = 'ticks';
+
+    for (i = 0; i <= 24; i++) {
+        var tick = document.createElement("span");
+        tick.className = 'tick';
+        tick.innerHTML = time_text(i);
+        ticks.appendChild(tick);
+    }
+
+    slider_upper.after(ticks);
+
 
     // Update the current slider value (each time you drag the slider handle)
     slider_lower.oninput = function() {
         var value = this.value;
-        output.innerHTML = output.innerHTML = value + ":00-" + slider_upper.value + ":00";
+        output.innerHTML =  time_text(value) + " - " + time_text(slider_upper.value);
    
     }
 
     // Update the current slider value (each time you drag the slider handle)
     slider_upper.oninput = function() {
         var value = this.value;
-        output.innerHTML = output.innerHTML = slider_lower.value + ":00-" + value + ":00";
+        output.innerHTML = time_text(slider_lower.value) + " - " + time_text(value);
    
     }
 
@@ -88,3 +101,18 @@ function timeSlider() {
     }
     
 }
+
+
+function time_text(t){
+
+    var time = ""; 
+
+    if (t < 10) {
+        time = "0" + t + ":00";
+    } else {
+        time = t + ":00";
+    } 
+    
+    return time;
+}
+

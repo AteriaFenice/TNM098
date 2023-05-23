@@ -25,87 +25,97 @@
 
 /*   ------------------- Slider -----------------------  */
 
-.slidecontainer {
-    width: 100%; /* Width of the outside container */
+#slider-container {
+    width: 60%; /* Width of the outside container */
+    font-family: sans-serif;
+    font-size: 12px;
+    line-height: 20px;
+    color: black;
+    background: white;
 }
-  
-/* The slider itself */
-.slider {
+
+
+
+input[type=range] {
     -webkit-appearance: none;
-    width: 50%;
-    height: 15px;
-    border-radius: 5px;  
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
-  }
-  
-/* Mouse-over effects */
-.slider:hover {
-    opacity: 1; /* Fully shown on mouse-over */
+    display: block;
+    margin: 0;
+    width: 100%;
+    background: transparent;
 }
 
-/* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
-.slider::-webkit-slider-thumb {
+input[type=range]::-webkit-slider-runnable-track {
     -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%; 
-    background: #04AA6D;
-    cursor: pointer;
-  }
-
-  .slider::-moz-range-thumb {
-    width: 25px;
-    height: 25px;
-    border-radius: 50%;
-    background: #04AA6D;
-    cursor: pointer;
-  }
-
-  
-svg .domain {
-    stroke: #828181;
+    width: 100%;
+    height: 20px;
+    margin-top: 5px;
+    color: transparent;
+    background: lightgray;
+    border-radius: 999px;
+    border: none;
 }
 
-svg .tick line {
-    stroke: #828181;
+input[type=range]::-moz-range-track {
+-webkit-appearance: none;
+width: 100%;
+height: 20px;
+color: transparent;
+background: lightgray;
+border-radius: 999px;
+border: none;
 }
 
-svg .tick text {
-    fill: #828181;
+input[type=range]::-ms-track {
+-webkit-appearance: none;
+width: 100%;
+height: 20px;
+color: transparent;
+background: lightgray;
+border-radius: 999px;
+border: none;
 }
 
-svg .handle {
-    fill: #a9e806;
+input[type=range]::-ms-fill-lower {
+display: none;
 }
 
-svg .selection {
-    fill: #a9e806;
-    fill-opacity: 1;
-    stroke: none;
+input[type=range]::-ms-fill-upper {
+display: none;
 }
 
-.start-date, .end-date {
-    color: #fff;
-}
-.start-date label, .end-date label {
-    color: #828181;
-}
-
-.multi-range {
-    position: relative;
-    
+input[type=range]::-webkit-slider-thumb {
+-webkit-appearance: none;
+height: 20px;
+width: 20px;
+border-radius: 30px;
+background: black;
+box-shadow: 0px 2px 10px -2px black(1);
 }
 
-/*.carCheckbox {
-    margin: 5px 10px;
-    font-size: 18px;
-    
-}*/
+input[type=range]::-moz-range-thumb {
+-webkit-appearance: none;
+height: 20px;
+width: 20px;
+border-radius: 30px;
+background: black;
+box-shadow: 0px 2px 10px -2px black(1);
+}
+
+input[type=range]::-ms-thumb {
+-webkit-appearance: none;
+height: 20px;
+width: 20px;
+border-radius: 30px;
+background: black;
+box-shadow: 0px 2px 10px -2px black(1);
+}
+
+.ticks {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    width: 100
+}
 
 .tick {
     position: relative;
@@ -114,7 +124,7 @@ svg .selection {
     width: 1px;
     background: gray;
     height: 10px;
-    line-height: 50px;
+    line-height: 40px;
     margin-bottom: 20px;
 }
 
