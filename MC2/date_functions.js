@@ -5,6 +5,18 @@ function daySlider() {
     var dayText = days_text[new Date(used_year, used_month, slider.value, start_time,0).getDay()];
     output.innerHTML =  dayText + " " + slider.value + " Jan"; // Display the default slider value
 
+    var ticks = document.createElement('div');
+    ticks.className = 'ticks';
+
+    for (i = used_min; i <= used_max; i++) {
+        var tick = document.createElement("span");
+        tick.className = 'tick';
+        tick.innerHTML = i;
+        ticks.appendChild(tick);
+    }
+
+    slider.after(ticks);
+
     // Update the current slider value (each time you drag the slider handle)
     slider.oninput = function() {
         var value = this.value;
