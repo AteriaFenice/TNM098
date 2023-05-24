@@ -136,13 +136,3 @@ function storeCoords(name){
     }
     
 }
-/* 
-Ahaggo Museum: long, lat: [24.878464, 36.07592]
-Kronos Mart: long, lat: [24.84842, 36.06722]
-Bean There Done That: long, lat: [24.850243, 36.082679]
-Alberts Fine Clothing: long, lat: [24.85711, 36.07667]
-Roberts and Sons: long, lat: [24.852019, 36.06342]
-Abila Hospital: long, lat: [24.879302, 36.055626]
-
-
-*/

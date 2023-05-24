@@ -2,7 +2,7 @@ function drawGPSPoints() {
 
     //console.log('drawingGPSPoints function called')
 
-    var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);
+    //var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);
 
     const svg = d3.select("#map")
         .append("svg")
@@ -17,11 +17,12 @@ function drawGPSPoints() {
         .data(filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0}))
         .enter()
         .append("rect")
+        .attr('id', 'rectangles')
         .attr("x", d =>(d.long-MIN_LONG)*1000*MAPY*1.72+10)
         .attr("y", d => (image_width+50)/2-(d.lat-MIN_LAT)*1000*MAPX*0.47)
         .attr('width', 2)
         .attr('height', 2)
-        .attr('fill', d => {return myColor(d.id);})
+        .attr('fill', d => {return colorsBright[d.id];})
         .on("mouseover", function() {
             return tooltip.style("visibility", "visible");
         })

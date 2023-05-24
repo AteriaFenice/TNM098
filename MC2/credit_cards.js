@@ -26,8 +26,8 @@ function drawCCPoints(){
     var last4 = ccnumlast4;
     var stores = unique(store)
 
-    var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
-    var rad = 5
+    //var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
+    var rad = 5;
     var nodes = 0;
     var coords = 0;
     d3.selectAll('circle', '#circles').remove();
@@ -69,9 +69,11 @@ function drawCCPoints(){
         .force('collision', d3.forceCollide().radius(function(d){
             return rad//d.price /10
         }))
+        
 
         simulation.tick()
         ticked()
+        
 
         function ticked(){
             svg.selectAll('circle', '#circles')
@@ -84,11 +86,11 @@ function drawCCPoints(){
                 return rad
             })
             .attr('fill', function(d){
-                return myColor(Array.from(last4).indexOf(d.num))
+                return colorsBright[Array.from(last4).indexOf(d.num)]
             })
-            .attr('fill-opacity', 0.5)
+            .attr('fill-opacity', 0.9)
             .attr('stroke', function(d){
-                return myColor(Array.from(last4).indexOf(d.num))
+                return colorsBright[Array.from(last4).indexOf(d.num)]
             })
             .attr('cx', function(d){
                 return d.x
@@ -105,7 +107,7 @@ function drawCCPoints(){
         return tooltip.style("visibility", "visible");
     })
     .on("mousemove", function(d, i) {
-        tooltip.text('Price: ' + i.price + ' \nTime: ' + new Date(i.timestamp).toLocaleTimeString() + '\n'+ card + i.num);
+        tooltip.text(i.location + '\r\nPrice: ' + i.price + ' \r\nTime: ' + new Date(i.timestamp).toLocaleTimeString() + '\r\n'+ card + i.num);
         return tooltip.style("top",
             (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
     })
