@@ -38,6 +38,8 @@ var filtered_gps_data = [];
 var filtered_cc_data = [];
 var all_id = Array.from({length: 35}, (_, i) => i + 1)
 var chosen_ccnr = [];
+var filtered_lc_data = [];
+
 
 // Calculate milliseconds in a year
 const minute = 1000 * 60;
@@ -95,6 +97,7 @@ async function getData() {
         car_data = await d3.csv('MC2/car-assignments.csv');
         gps_data = await d3.csv('MC2/gps.csv');
         card_data = await d3.csv('MC2/cc_data.csv');
+        loyalty_data = await d3.csv('MC2/loyalty_data.csv');
 
         //console.log(gps_data.length);
 
@@ -126,6 +129,10 @@ function getFilterData(start_date, end_date, id){
     });
 
     filtered_cc_data = card_data.filter((data) => {
+        const temp_date = new Date(data.timestamp).getTime();
+        return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
+    });
+    filtered_lc_data = loyalty_data.filter((data) => {
         const temp_date = new Date(data.timestamp).getTime();
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
     });

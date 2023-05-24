@@ -1,21 +1,35 @@
 function drawCCPoints(){
 
     // get all unique card numbers and stores
-    var ccnum = []
+    var cardNum = []
     var store = []
 
-    for(var i = 0; i < card_data.length; i++){
-        ccnum[i] = card_data[i].last4ccnum
-        store[i] = card_data[i].location
-    }
+    //if statement for cc or loyalty toggled
+    var data = card_data
+    data.num = card_data.last4ccnum
+    var filtered_data = filtered_cc_data
+    var card = 'Credit Card: '
 
-    var last4 = unique(ccnum)
+    for(var i = 0; i < data.length; i++){
+        if(data == card_data){
+            data[i].num = card_data[i].last4ccnum
+        }
+        if(data == loyalty_data){
+            data[i].num = loyalty_data[i].loyaltynum
+        }
+        
+        cardNum[i] = data[i].num
+        store[i] = data[i].location
+    }
+    //console.log(cardNum)
+    var last4 = unique(cardNum)
     var stores = unique(store)
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
-    var rad = 10
+    var rad = 5
     var nodes = 0;
-    d3.selectAll('circle').remove();
+    var coords = 0;
+    d3.selectAll('circle', '#circles').remove();
 
     const svg = d3.select("#map")
         .append("svg")
@@ -38,10 +52,10 @@ function drawCCPoints(){
         .attr('class', 'simulations')
         .append("g");
 
-        var nodes = filtered_cc_data.filter(function(d){
+        var nodes = filtered_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
-        //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
+        console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
 
         var coords = storeCoords(Array.from(stores)[i])
 
@@ -58,19 +72,20 @@ function drawCCPoints(){
         ticked()
 
         function ticked(){
-            svg.selectAll('circle')
+            svg.selectAll('circle', '#circles')
             .data(nodes)
             .join('circle')
+            .attr('id', 'circles')
             .attr('r', function(d){
                 //return d.price /10
                 return rad
             })
             .attr('fill', function(d){
-                return myColor(Array.from(last4).indexOf(d.last4ccnum))
+                return myColor(Array.from(last4).indexOf(d.num))
             })
             .attr('fill-opacity', 0.5)
             .attr('stroke', function(d){
-                return myColor(Array.from(last4).indexOf(d.last4ccnum))
+                return myColor(Array.from(last4).indexOf(d.num))
             })
             .attr('cx', function(d){
                 return d.x
@@ -78,20 +93,24 @@ function drawCCPoints(){
             .attr('cy', function(d){
                 return d.y
             })
-            .on("mouseover", function() {
-                return tooltip.style("visibility", "visible");
-            })
-            .on("mousemove", function(d, i) {
-                tooltip.text('Price: ' + i.price + ' \nTime: ' + i.timestamp + 'ccnum: '+ i.last4ccnum);
-                return tooltip.style("top",
-                    (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
-            })
-            .on("mouseout", function() {
-                return tooltip.style("visibility", "hidden");
-            })
         }
     }
+
+    
+    d3.selectAll('circle')
+    .on("mouseover", function() {
+        return tooltip.style("visibility", "visible");
+    })
+    .on("mousemove", function(d, i) {
+        tooltip.text('Price: ' + i.price + ' \nTime: ' + new Date(i.timestamp).toLocaleTimeString() + '\n'+ card + i.num);
+        return tooltip.style("top",
+            (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
+    })
+    .on("mouseout", function() {
+        return tooltip.style("visibility", "hidden");
+    })
 };
+
 
 function ccCheckBoxes(){
     console.log("ccCheckboxes function called");
