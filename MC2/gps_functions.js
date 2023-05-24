@@ -42,8 +42,8 @@ function carCheckBoxes() {
 
     var checkbox_container = document.createElement("div");
     checkbox_container.innerHTML = "Name : Card ID";
-    //checkbox_container.id = "checkbox-container";
-    checkbox_container.className = "checkbox-dropdown";
+    checkbox_container.id = "checkbox-container_car";
+    checkbox_container.className = "checkbox-dropdown col-md4";
 
     var ul_item = document.createElement("ul");
     ul_item.className = "checkbox-dropdown-list";

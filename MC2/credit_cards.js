@@ -7,7 +7,9 @@ function drawCCPoints(){
     //if statement for cc or loyalty toggled
     var data = card_data
     data.num = card_data.last4ccnum
-    var filtered_data = filtered_cc_data
+    var filte_data = filtered_cc_data;
+    console.log(filte_data);
+    console.log(chosen_ccnr);
     var card = 'Credit Card: '
 
     for(var i = 0; i < data.length; i++){
@@ -18,11 +20,10 @@ function drawCCPoints(){
             data[i].num = loyalty_data[i].loyaltynum
         }
         
-        cardNum[i] = data[i].num
         store[i] = data[i].location
     }
     //console.log(cardNum)
-    var last4 = unique(cardNum)
+    var last4 = ccnumlast4;
     var stores = unique(store)
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
@@ -42,6 +43,8 @@ function drawCCPoints(){
     d3.selectAll("svg", '.simulations').remove()
 
 
+
+
     for(var i = 0; i < stores.size; i++){
 
         const svg = d3.select("#map")
@@ -52,11 +55,10 @@ function drawCCPoints(){
         .attr('class', 'simulations')
         .append("g");
 
-        var nodes = filtered_data.filter(function(d){
+        var nodes = filte_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
-        console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
-
+        //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
         var coords = storeCoords(Array.from(stores)[i])
 
         //createSimulation(nodes, coords, last4);¨
@@ -73,7 +75,8 @@ function drawCCPoints(){
 
         function ticked(){
             svg.selectAll('circle', '#circles')
-            .data(nodes)
+            //filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0})
+            .data(nodes.filter(function(d,i){ return chosen_ccnr.indexOf(parseInt(d.last4ccnum) >= 0)}))
             .join('circle')
             .attr('id', 'circles')
             .attr('r', function(d){
@@ -119,8 +122,8 @@ function ccCheckBoxes(){
 
     var checkbox_container = document.createElement("div");
     checkbox_container.innerHTML = "Credit Cards Nr";
-    //checkbox_container.id = "checkbox-container";
-    checkbox_container.className = "checkbox-dropdown";
+    checkbox_container.id = "checkbox-container_cc";
+    checkbox_container.className = "checkbox-dropdown col-md4";
 
     var ul_item = document.createElement("ul");
     ul_item.className = "checkbox-dropdown-list";
@@ -165,15 +168,15 @@ function ccCheckBoxes(){
 
         chosen_ccnr = checked_ccnr; // replace array with new array with ids
         //drawGPSPoints();
-        console.log(chosen_ccnr);
+        drawCCPoints();
     }
 
     
-    $(".checkbox-dropdown").click(function () {
+    $("#checkbox-container_cc").click(function () {
         $(this).toggleClass("is-active");
     });
     
-    $(".checkbox-dropdown ul").click(function(e) {
+    $("#checkbox-container_cc ul").click(function(e) {
         e.stopPropagation();
     });
    
