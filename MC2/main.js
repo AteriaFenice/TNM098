@@ -1,4 +1,4 @@
-var scale = 0.5
+var scale = 0.37    
 var image_height = 1535 * scale
 var image_width = 2740 * scale
 const MAX_LONG = 24.90848537;
@@ -36,7 +36,8 @@ var gps_data = [];
 var filtred_data = [];
 var filtered_gps_data = [];
 var filtered_cc_data = [];
-
+var all_id = Array.from({length: 35}, (_, i) => i + 1)
+var chosen_ccnr = [];
 
 // Calculate milliseconds in a year
 const minute = 1000 * 60;
@@ -45,7 +46,7 @@ const day = hour * 24;
 const year = day * 365;
 
 const used_year = 2014;
-const used_month = 0;
+const used_month = 0; // January
 const used_min = 6; 
 const used_max = 19; 
 
@@ -101,6 +102,7 @@ async function getData() {
         daySlider();
         timeSlider();
         carCheckBoxes();
+        ccCheckBoxes();
 
     } catch (error) {
         // Handle error
@@ -119,20 +121,6 @@ function getFilterData(start_date, end_date, id){
     filtered_gps_data = gps_data.filter((data) => {
         const temp_date = new Date(data.Timestamp).getTime();
 
-        /*if(id.length == 0){
-            return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime()); 
-        } else {
-
-            var temp = [];
-            
-            id.forEach(e => {
-                temp.push(temp_date >= start_date.getTime() && temp_date <= new Date(end_date).getTime() && e == id);
-            });
-
-            return temp;
-            
-        }*/
-
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
 
     });
@@ -146,9 +134,11 @@ function getFilterData(start_date, end_date, id){
     //console.log(filtered_cc_data.length);
 
     // CALL DRAW DATA POINTS HERE
-    drawGPSPoints();
+    
     drawCCPoints();
-    changeMenuColor();
+    drawGPSPoints();
+    changeMenuColorCar();
+    changeMenuColorCC();
     //storeCoords();
 
 }
