@@ -11,11 +11,13 @@ function drawCCPoints(){
         var data = card_data
         var filtered_data = filtered_cc_data
         var card = 'Credit Card: '
+        var last4 = ccnumlast4;
     }
     if(selectedCard == 'loyalty'){
         var data = loyalty_data
         var filtered_data = filtered_lc_data
         var card = 'Loyalty Card: '
+        var last4 = loynum;
     }
 
 
@@ -27,11 +29,10 @@ function drawCCPoints(){
             data[i].num = loyalty_data[i].loyaltynum
         }
         
-        cardNum[i] = data[i].num
         store[i] = data[i].location
     }
     //console.log(cardNum)
-    var last4 = unique(cardNum)
+    
     var stores = unique(store)
 
     //var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
@@ -51,6 +52,8 @@ function drawCCPoints(){
     d3.selectAll("svg", '.simulations').remove()
 
 
+
+
     for(var i = 0; i < stores.size; i++){
 
         const svg = d3.select("#map")
@@ -65,7 +68,6 @@ function drawCCPoints(){
             return d.location == Array.from(stores)[i];
         })
         //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
-
         var coords = storeCoords(Array.from(stores)[i])
 
         //createSimulation(nodes, coords, last4);¨
@@ -84,7 +86,8 @@ function drawCCPoints(){
 
         function ticked(){
             svg.selectAll('circle', '#circles')
-            .data(nodes)
+            //filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0})
+            .data(nodes.filter(function(d,i){ return chosen_ccnr.indexOf(parseInt(d.last4ccnum) >= 0)}))
             .join('circle')
             .attr('id', 'circles')
             .attr('r', function(d){
@@ -130,8 +133,8 @@ function ccCheckBoxes(){
 
     var checkbox_container = document.createElement("div");
     checkbox_container.innerHTML = "Credit Cards Nr";
-    //checkbox_container.id = "checkbox-container";
-    checkbox_container.className = "checkbox-dropdown";
+    checkbox_container.id = "checkbox-container_cc";
+    checkbox_container.className = "checkbox-dropdown col-md4";
 
     var ul_item = document.createElement("ul");
     ul_item.className = "checkbox-dropdown-list";
@@ -176,15 +179,15 @@ function ccCheckBoxes(){
 
         chosen_ccnr = checked_ccnr; // replace array with new array with ids
         //drawGPSPoints();
-        console.log(chosen_ccnr);
+        drawCCPoints();
     }
 
     
-    $(".checkbox-dropdown").click(function () {
+    $("#checkbox-container_cc").click(function () {
         $(this).toggleClass("is-active");
     });
     
-    $(".checkbox-dropdown ul").click(function(e) {
+    $("#checkbox-container_cc ul").click(function(e) {
         e.stopPropagation();
     });
    

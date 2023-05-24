@@ -44,9 +44,9 @@
 /*   ------------------- Slider -----------------------  */
 
 #slider-container {
-    width: 60%; /* Width of the outside container */
+    width: 75%; /* Width of the outside container */
     font-family: sans-serif;
-    font-size: 12px;
+    font-size: 10px;
     line-height: 10px;
     color: black;
     background: white;
@@ -131,7 +131,7 @@ input[type=range]::-ms-thumb {
 .ticks {
     display: flex;
     justify-content: space-between;
-    padding: 5px 10px;
+    padding: 5px 5px;
 }
 
 .tick {
@@ -152,9 +152,10 @@ input[type=range]::-ms-thumb {
     padding: 10px;
     position: relative;
     float: right;
-    margin: 5px 170px 10px 10px ;
     font-size: 12px;
+    margin: 5px 5px 10px 5px ;
     user-select: none;
+    pointer-events: auto; 
 }
 
 /* Display CSS arrow to the right of the dropdown text */
@@ -190,7 +191,7 @@ input[type=range]::-ms-thumb {
     opacity: 0; /* hide the dropdown */
    
     transition: opacity 0.2s ease-in-out;
-    height: 750px;
+    height: 500px;
     overflow: scroll;
     overflow-x: hidden;
     pointer-events: none; /* avoid mouse click events inside the dropdown */
