@@ -6,7 +6,6 @@ function drawCCPoints(){
 
     //if statement for cc or loyalty toggled
     var data = card_data
-    data.num = card_data.last4ccnum
     var filtered_data = filtered_cc_data
     var card = 'Credit Card: '
 
@@ -26,7 +25,7 @@ function drawCCPoints(){
     var stores = unique(store)
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
-    var rad = 5
+    var rad = 7;
     var nodes = 0;
     var coords = 0;
     d3.selectAll('circle', '#circles').remove();
@@ -67,9 +66,11 @@ function drawCCPoints(){
         .force('collision', d3.forceCollide().radius(function(d){
             return rad//d.price /10
         }))
+        
 
         simulation.tick()
         ticked()
+        
 
         function ticked(){
             svg.selectAll('circle', '#circles')
