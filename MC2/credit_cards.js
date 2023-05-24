@@ -5,11 +5,26 @@ function drawCCPoints(){
     var store = []
 
     //if statement for cc or loyalty toggled
-    var data = card_data
+    /*var data = card_data
     data.num = card_data.last4ccnum
     //var filte_data = filtered_cc_data.filter(function(d,i){ console.log(chosen_ccnr.indexOf(d.last4ccnum >= 0)); return chosen_ccnr.indexOf(d.last4ccnum >= 0)});
     var filte_data = filtered_cc_data.filter(function(d,i){return chosen_ccnr.indexOf(d.num) >= 0});
-    var card = 'Credit Card: '
+    var card = 'Credit Card: '*/
+
+    console.log(selectedCard)
+    if(selectedCard == 'credit'){
+        var data = card_data
+        var filte_data = filtered_cc_data.filter(function(d,i){return chosen_ccnr.indexOf(d.num) >= 0});
+        var card = 'Credit Card: '
+        var last4 = ccnumlast4;
+    }
+    if(selectedCard == 'loyalty'){
+        var data = loyalty_data
+        var filte_data = filtered_lc_data.filter(function(d,i){return chosen_loynr.indexOf(d.num) >= 0});
+        var card = 'Loyalty Card: '
+        var last4 = loynum;
+    }
+
 
     for(var i = 0; i < data.length; i++){
         if(data == card_data){
@@ -23,7 +38,7 @@ function drawCCPoints(){
         store[i] = data[i].location
     }
     //console.log(cardNum)
-    var last4 = unique(cardNum)
+    
     var stores = unique(store)
 
     var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
@@ -53,7 +68,7 @@ function drawCCPoints(){
         .attr('class', 'simulations')
         .append("g");
 
-        var nodes = filte_data.filter(function(d){
+        var nodes = filtered_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
         //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
@@ -301,3 +316,7 @@ console.log(last4);
 
 var last4array = Array.from(last4).join(', ');
 console.log(last4array);*/
+
+
+
+
