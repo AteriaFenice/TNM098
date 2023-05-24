@@ -2,7 +2,7 @@ function drawGPSPoints() {
 
     //console.log('drawingGPSPoints function called')
 
-    //var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);
+    var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);
 
     const svg = d3.select("#map")
         .append("svg")
@@ -17,12 +17,11 @@ function drawGPSPoints() {
         .data(filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0}))
         .enter()
         .append("rect")
-        .attr('id', 'rectangles')
         .attr("x", d =>(d.long-MIN_LONG)*1000*MAPY*1.72+10)
         .attr("y", d => (image_width+50)/2-(d.lat-MIN_LAT)*1000*MAPX*0.47)
-        .attr('width', 2)
-        .attr('height', 2)
-        .attr('fill', d => {return colorsBright[d.id];})
+        .attr('width', 3)
+        .attr('height', 3)
+        .attr('fill', d => {return colorsBright[d.id-1];})
         .on("mouseover", function() {
             return tooltip.style("visibility", "visible");
         })
@@ -42,7 +41,7 @@ function carCheckBoxes() {
     var map_container = document.getElementById("map");
 
     var checkbox_container = document.createElement("div");
-    checkbox_container.innerHTML = "Name : Card ID";
+    checkbox_container.innerHTML = "Name : Car ID";
     checkbox_container.id = "checkbox-container_car";
     checkbox_container.className = "checkbox-dropdown col-md4";
 
@@ -83,24 +82,28 @@ function carCheckBoxes() {
             checked_ids.push(id); // if checked add to checked_ids that is used later in drawing the gps points
         } else {
             //console.log(id + " unchecked");
-            checked_ids.pop(id);
+            var index = checked_ids.indexOf(this);
+            console.log('index: ', index);
+            checked_ids.splice(index);
         }
 
         chosen_id = checked_ids; // replace array with new array with ids
+        console.log(chosen_id);
         drawGPSPoints();
 
     }
 
     
-    $(".checkbox-dropdown").click(function () {
+    $("#checkbox-container_car").click(function () {
         $(this).toggleClass("is-active");
     });
     
-    $(".checkbox-dropdown ul").click(function(e) {
+    $("#checkbox-container_car ul").click(function(e) {
         e.stopPropagation();
     });
 
 }
+
 
 function changeMenuColorCar() {
 
@@ -114,9 +117,11 @@ function changeMenuColorCar() {
         c.style.backgroundColor = "white";
     })
 
+
     obj.forEach( d => {
-        var label_item = document.getElementById( "c" + d )
-        label_item.style.backgroundColor = '#D22B2B';
+        var label_item = document.getElementById( "c" + d );
+        //label_item.style.backgroundColor = '#D22B2B';
+        label_item.style.backgroundColor = colorsBright[d-1];
     })
     
 

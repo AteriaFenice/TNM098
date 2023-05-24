@@ -1,4 +1,4 @@
-var scale = 0.37    
+var scale = 0.35  
 var image_height = 1535 * scale
 var image_width = 2740 * scale
 const MAX_LONG = 24.90848537;
@@ -39,6 +39,7 @@ var filtered_cc_data = [];
 var all_id = Array.from({length: 35}, (_, i) => i + 1)
 var chosen_ccnr = [];
 var filtered_lc_data = [];
+var chosen_loynr = [];
 
 
 // Calculate milliseconds in a year
@@ -106,6 +107,7 @@ async function getData() {
         timeSlider();
         carCheckBoxes();
         ccCheckBoxes();
+        loyCheckBoxes();
 
     } catch (error) {
         // Handle error
@@ -123,7 +125,6 @@ function getFilterData(start_date, end_date, id){
 
     filtered_gps_data = gps_data.filter((data) => {
         const temp_date = new Date(data.Timestamp).getTime();
-
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
 
     });
@@ -132,6 +133,7 @@ function getFilterData(start_date, end_date, id){
         const temp_date = new Date(data.timestamp).getTime();
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
     });
+
     filtered_lc_data = loyalty_data.filter((data) => {
         const temp_date = new Date(data.timestamp).getTime();
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
@@ -146,6 +148,7 @@ function getFilterData(start_date, end_date, id){
     drawGPSPoints();
     changeMenuColorCar();
     changeMenuColorCC();
+    changeMenuColorLoy();
     //storeCoords();
 
 }

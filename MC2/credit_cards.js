@@ -7,9 +7,8 @@ function drawCCPoints(){
     //if statement for cc or loyalty toggled
     var data = card_data
     data.num = card_data.last4ccnum
-    var filte_data = filtered_cc_data;
-    console.log(filte_data);
-    console.log(chosen_ccnr);
+    //var filte_data = filtered_cc_data.filter(function(d,i){ console.log(chosen_ccnr.indexOf(d.last4ccnum >= 0)); return chosen_ccnr.indexOf(d.last4ccnum >= 0)});
+    var filte_data = filtered_cc_data.filter(function(d,i){return chosen_ccnr.indexOf(d.num) >= 0});
     var card = 'Credit Card: '
 
     for(var i = 0; i < data.length; i++){
@@ -20,14 +19,15 @@ function drawCCPoints(){
             data[i].num = loyalty_data[i].loyaltynum
         }
         
+        cardNum[i] = data[i].num
         store[i] = data[i].location
     }
     //console.log(cardNum)
-    var last4 = ccnumlast4;
+    var last4 = unique(cardNum)
     var stores = unique(store)
 
-    //var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
-    var rad = 5;
+    var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
+    var rad = 5
     var nodes = 0;
     var coords = 0;
     d3.selectAll('circle', '#circles').remove();
@@ -41,8 +41,6 @@ function drawCCPoints(){
         .append("g");
 
     d3.selectAll("svg", '.simulations').remove()
-
-
 
 
     for(var i = 0; i < stores.size; i++){
@@ -69,11 +67,9 @@ function drawCCPoints(){
         .force('collision', d3.forceCollide().radius(function(d){
             return rad//d.price /10
         }))
-        
 
         simulation.tick()
         ticked()
-        
 
         function ticked(){
             svg.selectAll('circle', '#circles')
@@ -86,11 +82,11 @@ function drawCCPoints(){
                 return rad
             })
             .attr('fill', function(d){
-                return colorsBright[Array.from(last4).indexOf(d.num)]
+                return myColor(Array.from(last4).indexOf(d.num))
             })
-            .attr('fill-opacity', 0.9)
+            .attr('fill-opacity', 0.5)
             .attr('stroke', function(d){
-                return colorsBright[Array.from(last4).indexOf(d.num)]
+                return myColor(Array.from(last4).indexOf(d.num))
             })
             .attr('cx', function(d){
                 return d.x
@@ -107,7 +103,7 @@ function drawCCPoints(){
         return tooltip.style("visibility", "visible");
     })
     .on("mousemove", function(d, i) {
-        tooltip.text(i.location + '\r\nPrice: ' + i.price + ' \r\nTime: ' + new Date(i.timestamp).toLocaleTimeString() + '\r\n'+ card + i.num);
+        tooltip.text('Price: ' + i.price + ' \nTime: ' + new Date(i.timestamp).toLocaleTimeString() + '\n'+ card + i.num);
         return tooltip.style("top",
             (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
     })
@@ -123,7 +119,7 @@ function ccCheckBoxes(){
     var map_container = document.getElementById("map");
 
     var checkbox_container = document.createElement("div");
-    checkbox_container.innerHTML = "Credit Cards Nr";
+    checkbox_container.innerHTML = "Credit Card Nr";
     checkbox_container.id = "checkbox-container_cc";
     checkbox_container.className = "checkbox-dropdown col-md4";
 
@@ -171,6 +167,7 @@ function ccCheckBoxes(){
         chosen_ccnr = checked_ccnr; // replace array with new array with ids
         //drawGPSPoints();
         drawCCPoints();
+        drawGPSPoints();
     }
 
     
@@ -179,6 +176,74 @@ function ccCheckBoxes(){
     });
     
     $("#checkbox-container_cc ul").click(function(e) {
+        e.stopPropagation();
+    });
+   
+}
+
+function loyCheckBoxes(){
+    console.log("loyCheckboxes function called");
+
+    var map_container = document.getElementById("map");
+
+    var checkbox_container = document.createElement("div");
+    checkbox_container.innerHTML = "Loyalty Card Nr";
+    checkbox_container.id = "checkbox-container_loy";
+    checkbox_container.className = "checkbox-dropdown col-md4";
+
+    var ul_item = document.createElement("ul");
+    ul_item.className = "checkbox-dropdown-list";
+
+    var checked_loynr = [];
+
+    loynum.forEach(d => {
+        var div_item = document.createElement("li");
+        div_item.className = "loyCheckbox";
+
+        var label_item = document.createElement("label");
+        label_item.for = d;
+        label_item.innerHTML = d;
+        label_item.id = "loy" + d;
+        label_item.className = "loy_label";
+
+        var input_item = document.createElement("input");
+        input_item.id = d;
+        input_item.type = "checkbox";
+        input_item.value = d;
+        input_item.onclick = updateId;
+
+        label_item.appendChild(input_item);
+        div_item.appendChild(label_item);
+        ul_item.appendChild(div_item);
+        
+    });
+
+    checkbox_container.appendChild(ul_item)
+    map_container.appendChild(checkbox_container);
+
+    function updateId(e) {
+        var id = this.value;
+
+        if(this.checked == true){
+            //console.log(id + " checked");
+            checked_loynr.push(id); // if checked add to checked_ids that is used later in drawing the gps points
+        } else {
+            //console.log(id + " unchecked");
+            checked_loynr.pop(id);
+        }
+
+        chosen_ccnr = checked_loynr; // replace array with new array with ids
+        //drawGPSPoints();
+        drawCCPoints();
+        drawGPSPoints();
+    }
+
+    
+    $("#checkbox-container_loy").click(function () {
+        $(this).toggleClass("is-active");
+    });
+    
+    $("#checkbox-container_loy ul").click(function(e) {
         e.stopPropagation();
     });
    
@@ -201,6 +266,26 @@ function changeMenuColorCC() {
     })
 
 }
+
+
+function changeMenuColorLoy(){
+    let obj = unique(filtered_lc_data.filter( item => (
+        loynum.includes(parseInt(item.loyaltynum))
+    )).map(item => item.loyaltynum));
+
+    var x = document.querySelectorAll(".loy_label");
+
+    x.forEach( c => {
+        c.style.backgroundColor = "white";
+    })
+
+    obj.forEach( d => {
+        var label_item = document.getElementById( "loy" + d )
+        console.log("loy" + d)
+        label_item.style.backgroundColor = '#D22B2B';
+    })
+}
+
 
 // To find all unique cc last 4 nr 
 /*var ccnum = [];
