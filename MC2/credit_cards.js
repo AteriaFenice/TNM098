@@ -94,20 +94,10 @@ function drawCCPoints(){
             .attr('cy', function(d){
                 return d.y
             })
-            /*.on("mouseover", function() {
-                return tooltip.style("visibility", "visible");
-            })
-            .on("mousemove", function(d, i) {
-                tooltip.text('Price: ' + i.price + ' \nTime: ' + i.timestamp + 'ccnum: '+ i.last4ccnum);
-                return tooltip.style("top",
-                    (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
-            })
-            .on("mouseout", function() {
-                return tooltip.style("visibility", "hidden");
-            })*/
         }
     }
 
+    
     d3.selectAll('circle')
     .on("mouseover", function() {
         return tooltip.style("visibility", "visible");
@@ -121,3 +111,104 @@ function drawCCPoints(){
         return tooltip.style("visibility", "hidden");
     })
 };
+
+
+function ccCheckBoxes(){
+    console.log("ccCheckboxes function called");
+
+    var map_container = document.getElementById("map");
+
+    var checkbox_container = document.createElement("div");
+    checkbox_container.innerHTML = "Credit Cards Nr";
+    //checkbox_container.id = "checkbox-container";
+    checkbox_container.className = "checkbox-dropdown";
+
+    var ul_item = document.createElement("ul");
+    ul_item.className = "checkbox-dropdown-list";
+
+    var checked_ccnr = [];
+
+    ccnumlast4.forEach(d => {
+        var div_item = document.createElement("li");
+        div_item.className = "ccCheckbox";
+
+        var label_item = document.createElement("label");
+        label_item.for = d;
+        label_item.innerHTML = d;
+        label_item.id = "cc" + d;
+        label_item.className = "cc_label";
+
+        var input_item = document.createElement("input");
+        input_item.id = d;
+        input_item.type = "checkbox";
+        input_item.value = d;
+        input_item.onclick = updateId;
+
+        label_item.appendChild(input_item);
+        div_item.appendChild(label_item);
+        ul_item.appendChild(div_item);
+        
+    });
+
+    checkbox_container.appendChild(ul_item)
+    map_container.appendChild(checkbox_container);
+
+    function updateId(e) {
+        var id = this.value;
+
+        if(this.checked == true){
+            //console.log(id + " checked");
+            checked_ccnr.push(id); // if checked add to checked_ids that is used later in drawing the gps points
+        } else {
+            //console.log(id + " unchecked");
+            checked_ccnr.pop(id);
+        }
+
+        chosen_ccnr = checked_ccnr; // replace array with new array with ids
+        //drawGPSPoints();
+        console.log(chosen_ccnr);
+    }
+
+    
+    $(".checkbox-dropdown").click(function () {
+        $(this).toggleClass("is-active");
+    });
+    
+    $(".checkbox-dropdown ul").click(function(e) {
+        e.stopPropagation();
+    });
+   
+}
+
+function changeMenuColorCC() {
+    let obj = unique(filtered_cc_data.filter( item => (
+        ccnumlast4.includes(parseInt(item.last4ccnum))
+    )).map(item => item.last4ccnum));
+
+    var x = document.querySelectorAll(".cc_label");
+
+    x.forEach( c => {
+        c.style.backgroundColor = "white";
+    })
+
+    obj.forEach( d => {
+        var label_item = document.getElementById( "cc" + d )
+        label_item.style.backgroundColor = '#D22B2B';
+    })
+
+}
+
+// To find all unique cc last 4 nr 
+/*var ccnum = [];
+
+for(var i = 0; i < card_data.length; i++){
+
+    ccnum[i] = card_data[i].last4ccnum
+}
+
+var last4 = unique(ccnum)
+
+console.log(last4);
+
+var last4array = Array.from(last4).join(', ');
+console.log(last4array);*/

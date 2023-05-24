@@ -42,7 +42,7 @@ function carCheckBoxes() {
 
     var checkbox_container = document.createElement("div");
     checkbox_container.innerHTML = "Name : Card ID";
-    checkbox_container.id = "checkbox-container";
+    //checkbox_container.id = "checkbox-container";
     checkbox_container.className = "checkbox-dropdown";
 
     var ul_item = document.createElement("ul");
@@ -56,6 +56,8 @@ function carCheckBoxes() {
         var label_item = document.createElement("label");
         label_item.for = d.CarID;
         label_item.innerHTML = d.FirstName + " " + d.LastName + " : " + d.CarID;
+        label_item.id = "c" + d.CarID;
+        label_item.className = "car_label";
 
         var input_item = document.createElement("input");
         input_item.id = d.CarID;
@@ -99,13 +101,22 @@ function carCheckBoxes() {
 
 }
 
-function changeMenuColor() {
-    var car_menu = document.getElementById("checkbox-container");
-    
-    car_data.forEach( c => {
-        if (filtered_gps_data.includes(c.CarID)) {
-            console.log(filtered_gps_data.includes(c.CarID))
-        }
+function changeMenuColorCar() {
+
+    let obj = unique(filtered_gps_data.filter( item => (
+        all_id.includes(parseInt(item.id))
+    )).map(item => item.id));
+
+    var x = document.querySelectorAll(".car_label");
+
+    x.forEach( c => {
+        c.style.backgroundColor = "white";
     })
+
+    obj.forEach( d => {
+        var label_item = document.getElementById( "c" + d )
+        label_item.style.backgroundColor = '#D22B2B';
+    })
+    
 
 }
