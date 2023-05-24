@@ -5,9 +5,19 @@ function drawCCPoints(){
     var store = []
 
     //if statement for cc or loyalty toggled
-    var data = card_data
-    var filtered_data = filtered_cc_data
-    var card = 'Credit Card: '
+
+    console.log(selectedCard)
+    if(selectedCard == 'credit'){
+        var data = card_data
+        var filtered_data = filtered_cc_data
+        var card = 'Credit Card: '
+    }
+    if(selectedCard == 'loyalty'){
+        var data = loyalty_data
+        var filtered_data = filtered_lc_data
+        var card = 'Loyalty Card: '
+    }
+
 
     for(var i = 0; i < data.length; i++){
         if(data == card_data){
@@ -54,7 +64,7 @@ function drawCCPoints(){
         var nodes = filtered_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
-        console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
+        //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
 
         var coords = storeCoords(Array.from(stores)[i])
 
@@ -212,3 +222,7 @@ console.log(last4);
 
 var last4array = Array.from(last4).join(', ');
 console.log(last4array);*/
+
+
+
+
