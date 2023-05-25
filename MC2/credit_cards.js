@@ -1,7 +1,7 @@
 function drawCCPoints(){
 
     // get all unique card numbers and stores
-    var cardNum = []
+    //var cardNum = []
     var store = []
 
     //if statement for cc or loyalty toggled
@@ -25,7 +25,7 @@ function drawCCPoints(){
         var last4 = loynum;
     }
 
-    console.log(filte_data);
+    //console.log(filte_data);
 
 
     for(var i = 0; i < data.length; i++){
@@ -36,14 +36,14 @@ function drawCCPoints(){
             data[i].num = loyalty_data[i].loyaltynum
         }
         
-        cardNum[i] = data[i].num
+        //cardNum[i] = data[i].num
         store[i] = data[i].location
     }
     //console.log(cardNum)
     
     var stores = unique(store)
 
-    var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
+    //var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
     var rad = 5
     var nodes = 0;
     var coords = 0;
@@ -101,11 +101,11 @@ function drawCCPoints(){
                 return rad
             })
             .attr('fill', function(d){
-                return myColor(Array.from(last4).indexOf(d.num))
+                return colorsBright[Array.from(last4).indexOf(d.num)]
             })
             .attr('fill-opacity', 0.5)
             .attr('stroke', function(d){
-                return myColor(Array.from(last4).indexOf(d.num))
+                return colorsBright[Array.from(last4).indexOf(d.num)]
             })
             .attr('cx', function(d){
                 return d.x
