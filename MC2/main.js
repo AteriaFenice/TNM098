@@ -85,17 +85,6 @@ let tooltip = d3.select("body")
 .style("visibility", "hidden")
 .text("a simple tooltip");
 
-function chooseCardType(){
-    var btn = document.getElementsByName('card');
-    for (i = 0; i < btn.length; i++) {
-        if (btn[i].checked)
-            selectedCard = btn[i].value
-    }
-    console.log(selectedCard)
-}
-chooseCardType()
-
-
 
 getData().then((output) => {
     // Filter the data after getting the data from the files 
@@ -114,6 +103,7 @@ async function getData() {
         card_data = await d3.csv('MC2/cc_data.csv');
         loyalty_data = await d3.csv('MC2/loyalty_data.csv');
 
+
         //console.log(gps_data.length);
 
         // CALL CREATE SLIDER FUNCTIONS HERE
@@ -122,6 +112,7 @@ async function getData() {
         carCheckBoxes();
         ccCheckBoxes();
         loyCheckBoxes();
+        chooseCardType();
 
     } catch (error) {
         // Handle error
@@ -170,3 +161,15 @@ function getFilterData(start_date, end_date, id){
 function unique(iterable) {
     return new Set(iterable);
 }
+
+function chooseCardType(){
+    var btn = document.getElementsByName('card');
+    for (i = 0; i < btn.length; i++) {
+        if (btn[i].checked)
+            selectedCard = btn[i].value
+    }
+    console.log(selectedCard)
+    drawCCPoints();
+    drawGPSPoints();
+}
+

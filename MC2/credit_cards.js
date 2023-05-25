@@ -11,22 +11,25 @@ function drawCCPoints(){
     var filte_data = filtered_cc_data.filter(function(d,i){return chosen_ccnr.indexOf(d.num) >= 0});
     var card = 'Credit Card: '*/
 
+    var data = [];
+    var filte_data = [];
+    var card = ''
+    var last4 = [];
+
+
     console.log(selectedCard)
     if(selectedCard == 'credit'){
-        var data = card_data
-        var filte_data = filtered_cc_data.filter(function(d,i){return chosen_ccnr.indexOf(d.num) >= 0});
-        var card = 'Credit Card: '
-        var last4 = ccnumlast4;
+        data = card_data
+        filte_data = filtered_cc_data.filter(function(d,i){return chosen_ccnr.indexOf(d.num) >= 0});
+        card = 'Credit Card: '
+        last4 = ccnumlast4;
     }
     if(selectedCard == 'loyalty'){
-        var data = loyalty_data
-        var filte_data = filtered_lc_data.filter(function(d,i){return chosen_loynr.indexOf(d.num) >= 0});
-        var card = 'Loyalty Card: '
-        var last4 = loynum;
+        data = loyalty_data
+        filte_data = filtered_lc_data.filter(function(d,i){return chosen_loynr.indexOf(d.num) >= 0});
+        card = 'Loyalty Card: '
+        last4 = loynum;
     }
-
-    console.log(filte_data);
-
 
     for(var i = 0; i < data.length; i++){
         if(data == card_data){
@@ -74,7 +77,6 @@ function drawCCPoints(){
             return d.location == Array.from(stores)[i];
         })
 
-        console.log(nodes);
         //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
         var coords = storeCoords(Array.from(stores)[i])
 
@@ -90,22 +92,35 @@ function drawCCPoints(){
         simulation.tick()
         ticked()
 
+
         function ticked(){
             svg.selectAll('circle', '#circles')
             //filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0})
             .data(nodes)
             .join('circle')
-            .attr('id', 'circles')
+            .attr('class', 'circles')
             .attr('r', function(d){
                 //return d.price /10
                 return rad
             })
             .attr('fill', function(d){
-                return myColor(Array.from(last4).indexOf(d.num))
+                if(selectedCard == 'credit'){
+                    return colorsBright[last4.indexOf(parseInt(d.num))]
+                }
+                if(selectedCard == 'loyalty'){
+                    return colorsBright[last4.indexOf(d.num)]
+                }
+
             })
-            .attr('fill-opacity', 0.5)
+            .attr('fill-opacity', 1)
             .attr('stroke', function(d){
-                return myColor(Array.from(last4).indexOf(d.num))
+                if(selectedCard == 'credit'){
+                    return colorsBright[last4.indexOf(parseInt(d.num))]
+                }
+                if(selectedCard == 'loyalty'){
+                    return colorsBright[last4.indexOf(d.num)]
+                }
+
             })
             .attr('cx', function(d){
                 return d.x
@@ -180,7 +195,8 @@ function ccCheckBoxes(){
             checked_ccnr.push(id); // if checked add to checked_ids that is used later in drawing the gps points
         } else {
             //console.log(id + " unchecked");
-            checked_ccnr.pop(id);
+            var index = checked_ccnr.indexOf(id);
+            checked_ccnr.splice(index,1);
         }
 
         chosen_ccnr = checked_ccnr; // replace array with new array with ids
@@ -248,10 +264,11 @@ function loyCheckBoxes(){
             checked_loynr.push(id); // if checked add to checked_ids that is used later in drawing the gps points
         } else {
             //console.log(id + " unchecked");
-            checked_loynr.pop(id);
+            var index = checked_loynr.indexOf(id);
+            checked_loynr.splice(index,1);
         }
 
-        chosen_ccnr = checked_loynr; // replace array with new array with ids
+        chosen_loynr = checked_loynr; // replace array with new array with ids
         //drawGPSPoints();
         drawCCPoints();
         drawGPSPoints();
@@ -289,7 +306,7 @@ function changeMenuColorCC() {
 
 function changeMenuColorLoy(){
     let obj = unique(filtered_lc_data.filter( item => (
-        loynum.includes(parseInt(item.loyaltynum))
+        loynum.includes(item.loyaltynum)
     )).map(item => item.loyaltynum));
 
     var x = document.querySelectorAll(".loy_label");

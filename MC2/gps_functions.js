@@ -82,13 +82,12 @@ function carCheckBoxes() {
             checked_ids.push(id); // if checked add to checked_ids that is used later in drawing the gps points
         } else {
             //console.log(id + " unchecked");
-            var index = checked_ids.indexOf(this);
-            console.log('index: ', index);
-            checked_ids.splice(index);
+
+            var index = checked_ids.indexOf(id);
+            checked_ids.splice(index,1);
         }
 
         chosen_id = checked_ids; // replace array with new array with ids
-        console.log(chosen_id);
         drawGPSPoints();
 
     }
