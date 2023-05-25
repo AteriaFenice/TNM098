@@ -28,11 +28,11 @@
     position: absolute;
     top: 0;
     left: 0;
-    fill: none;
+    fill: auto;
     pointer-events: none;
 }
 
-#circles {
+.circles {
     pointer-events:auto;
 }
 
