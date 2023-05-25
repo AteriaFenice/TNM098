@@ -25,6 +25,8 @@ function drawCCPoints(){
         var last4 = loynum;
     }
 
+    console.log(filte_data);
+
 
     for(var i = 0; i < data.length; i++){
         if(data == card_data){
@@ -68,9 +70,11 @@ function drawCCPoints(){
         .attr('class', 'simulations')
         .append("g");
 
-        var nodes = filtered_data.filter(function(d){
+        var nodes = filte_data.filter(function(d){
             return d.location == Array.from(stores)[i];
         })
+
+        console.log(nodes);
         //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
         var coords = storeCoords(Array.from(stores)[i])
 
@@ -89,7 +93,7 @@ function drawCCPoints(){
         function ticked(){
             svg.selectAll('circle', '#circles')
             //filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0})
-            .data(nodes.filter(function(d,i){ return chosen_ccnr.indexOf(parseInt(d.last4ccnum) >= 0)}))
+            .data(nodes)
             .join('circle')
             .attr('id', 'circles')
             .attr('r', function(d){
