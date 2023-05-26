@@ -33,7 +33,7 @@ function daySlider() {
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtered data");
+        //console.log("updated filtered data");
     }
 
 }
@@ -84,7 +84,7 @@ function timeSlider() {
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtered data");
+        //console.log("updated filtered data");
     }
 
     // Update the data when finished sliding
@@ -97,7 +97,7 @@ function timeSlider() {
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date, chosen_id);
-        console.log("updated filtered data");
+        //console.log("updated filtered data");
     }
     
 }

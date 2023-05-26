@@ -40,6 +40,24 @@
     pointer-events:auto;
 }
 
+#radio-buttons-container{
+    float: right;
+    position: relative;
+    margin: 16px 150px 0 5px;
+    width: 200px;
+    height: 75px;
+    padding: 10px 0 0 5px;
+}
+
+#radio-buttons-container label{ 
+    font-size: 13px;
+}
+
+#slider-container p{
+    font-size: 13px;
+    padding-top: 10px;
+}
+
 
 /*   ------------------- Slider -----------------------  */
 
@@ -50,6 +68,8 @@
     line-height: 10px;
     color: black;
     background: white;
+    margin: 0;
+    float: left;
 }
 
 

@@ -86,14 +86,24 @@ let tooltip = d3.select("body")
 .text("a simple tooltip");
 
 
+function chooseCardType(){
+    var btn = document.getElementsByName('card');
+    for (i = 0; i < btn.length; i++) {
+        if (btn[i].checked)
+            selectedCard = btn[i].value
+    }
+    //console.log(selectedCard)
+    drawCCPoints();
+    drawGPSPoints();
+}
+
+
 getData().then((output) => {
     // Filter the data after getting the data from the files 
     getFilterData(start_date, end_date, chosen_id);
 
     //console.log('finished loading data');
 });
-
-
 
 async function getData() {
     try {
@@ -107,12 +117,13 @@ async function getData() {
         //console.log(gps_data.length);
 
         // CALL CREATE SLIDER FUNCTIONS HERE
+        chooseCardType();
         daySlider();
         timeSlider();
         carCheckBoxes();
         ccCheckBoxes();
         loyCheckBoxes();
-        chooseCardType();
+    
 
     } catch (error) {
         // Handle error
@@ -162,14 +173,4 @@ function unique(iterable) {
     return new Set(iterable);
 }
 
-function chooseCardType(){
-    var btn = document.getElementsByName('card');
-    for (i = 0; i < btn.length; i++) {
-        if (btn[i].checked)
-            selectedCard = btn[i].value
-    }
-    console.log(selectedCard)
-    drawCCPoints();
-    drawGPSPoints();
-}
 

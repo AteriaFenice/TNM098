@@ -38,7 +38,7 @@ function drawGPSPoints() {
 }
 
 function carCheckBoxes() {
-    var map_container = document.getElementById("map");
+    var map_container = document.getElementById("checkbox-container-outer");
 
     var checkbox_container = document.createElement("div");
     checkbox_container.innerHTML = "Name : Car ID";
@@ -49,6 +49,7 @@ function carCheckBoxes() {
     ul_item.className = "checkbox-dropdown-list";
 
     var checked_ids = [];
+
     car_data.forEach(d => {
         var div_item = document.createElement("li");
         div_item.className = "carCheckbox";
@@ -63,6 +64,7 @@ function carCheckBoxes() {
         input_item.id = d.CarID;
         input_item.type = "checkbox";
         input_item.value = d.CarID;
+        input_item.className = 'car_checkbox';
         input_item.onclick = updateId;
 
         label_item.appendChild(input_item);
@@ -76,13 +78,12 @@ function carCheckBoxes() {
 
     function updateId(e) {
         var id = this.value;
-
+    
         if(this.checked == true){
             //console.log(id + " checked");
             checked_ids.push(id); // if checked add to checked_ids that is used later in drawing the gps points
         } else {
             //console.log(id + " unchecked");
-
             var index = checked_ids.indexOf(id);
             checked_ids.splice(index,1);
         }
@@ -92,7 +93,6 @@ function carCheckBoxes() {
 
     }
 
-    
     $("#checkbox-container_car").click(function () {
         $(this).toggleClass("is-active");
     });
@@ -116,12 +116,10 @@ function changeMenuColorCar() {
         c.style.backgroundColor = "white";
     })
 
-
     obj.forEach( d => {
         var label_item = document.getElementById( "c" + d );
         //label_item.style.backgroundColor = '#D22B2B';
         label_item.style.backgroundColor = colorsBright[d-1];
     })
-    
 
 }
