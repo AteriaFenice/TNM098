@@ -20,7 +20,9 @@
 <!-- Create a div where the graph will take place -->
 
 <body>
-    <div id="map"></div>
+    <div id="map">
+        <div id="checkbox-container-outer"></div>
+    </div>
     <div id="slider-container">
         <p>Date: <span id="dateText"></span></p>
         <input input type="range" min="6" max="19" value="6" class="slider" id="rangeDay">
@@ -30,13 +32,15 @@
             <input input type="range" min="0" max="24" value="7" class="slider" id="rangeTimeUpper">
         </span>
     </div>
-    <div class="buttons">
-        <input type="radio" checked="checked" name="card" value="credit" id="c" onclick="chooseCardType()">
-        <label for="c">Credit card</label>
-    </div>
-    <div class="buttons">
-        <input type="radio" name="card" value="loyalty" id="l" onclick="chooseCardType()">
-        <label for="l">Loyalty card</label>
+    <div id="radio-buttons-container">
+        <div class="buttons">
+            <input type="radio" checked="checked" name="card" value="credit" id="c" onclick="chooseCardType()">
+            <label for="c">Credit card</label>
+        </div>
+        <div class="buttons">
+            <input type="radio" name="card" value="loyalty" id="l" onclick="chooseCardType()">
+            <label for="l">Loyalty card</label>
+        </div>
     </div>
     <!--<div class ="dropdown checkbox-dropdown" id="checkbox-container"> Choose Person </div>-->
 </body>

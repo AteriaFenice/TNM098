@@ -17,7 +17,8 @@ function drawCCPoints(){
     var last4 = [];
 
 
-    console.log(selectedCard)
+    //console.log(selectedCard)
+
     if(selectedCard == 'credit'){
         data = card_data
         filte_data = filtered_cc_data.filter(function(d,i){return chosen_ccnr.indexOf(d.num) >= 0});
@@ -148,9 +149,8 @@ function drawCCPoints(){
 
 
 function ccCheckBoxes(){
-    console.log("ccCheckboxes function called");
 
-    var map_container = document.getElementById("map");
+    var map_container = document.getElementById("checkbox-container-outer");
 
     var checkbox_container = document.createElement("div");
     checkbox_container.innerHTML = "Credit Card Nr";
@@ -217,9 +217,8 @@ function ccCheckBoxes(){
 }
 
 function loyCheckBoxes(){
-    console.log("loyCheckboxes function called");
 
-    var map_container = document.getElementById("map");
+    var map_container = document.getElementById("checkbox-container-outer");
 
     var checkbox_container = document.createElement("div");
     checkbox_container.innerHTML = "Loyalty Card Nr";
@@ -317,7 +316,6 @@ function changeMenuColorLoy(){
 
     obj.forEach( d => {
         var label_item = document.getElementById( "loy" + d )
-        console.log("loy" + d)
         label_item.style.backgroundColor = '#D22B2B';
     })
 }
