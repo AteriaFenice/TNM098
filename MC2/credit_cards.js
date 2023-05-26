@@ -1,7 +1,7 @@
 function drawCCPoints(){
 
     // get all unique card numbers and stores
-    var cardNum = []
+    //var cardNum = []
     var store = []
 
     //if statement for cc or loyalty toggled
@@ -40,14 +40,14 @@ function drawCCPoints(){
             data[i].num = loyalty_data[i].loyaltynum
         }
         
-        cardNum[i] = data[i].num
+        //cardNum[i] = data[i].num
         store[i] = data[i].location
     }
     //console.log(cardNum)
     
     var stores = unique(store)
 
-    var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
+    //var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
     var rad = 5
     var nodes = 0;
     var coords = 0;
