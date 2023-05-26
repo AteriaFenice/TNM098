@@ -112,7 +112,7 @@ function drawCCPoints(){
                 }
 
             })
-            .attr('fill-opacity', 1)
+            .attr('fill-opacity', 0.7)
             .attr('stroke', function(d){
                 if(selectedCard == 'credit'){
                     return colorsBright[last4.indexOf(parseInt(d.num))]
@@ -137,7 +137,7 @@ function drawCCPoints(){
         return tooltip.style("visibility", "visible");
     })
     .on("mousemove", function(d, i) {
-        tooltip.text('Price: ' + i.price + ' \nTime: ' + new Date(i.timestamp).toLocaleTimeString() + '\n'+ card + i.num);
+        tooltip.text(i.location + '\r\nPrice: ' + i.price + ' \nTime: ' + new Date(i.timestamp).toLocaleTimeString() + '\n'+ card + i.num);
         return tooltip.style("top",
             (d.pageY - 10) + "px").style("left", (d.pageX + 10) + "px");
     })
