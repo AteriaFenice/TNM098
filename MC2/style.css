@@ -167,13 +167,13 @@ input[type=range]::-ms-thumb {
 
 /*  -------- Checkboxes -------- */
 .checkbox-dropdown {
-    width: 95px;
+    width: 100px;
     border: 1px solid #aaa;
     padding: 10px;
     position: relative;
     float: right;
     font-size: 12px;
-    margin: 5px 5px 5px 5px ;
+    margin: 5px 0px 5px 5px ;
     user-select: none;
     pointer-events: auto; 
 }

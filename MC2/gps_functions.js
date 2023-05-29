@@ -42,7 +42,7 @@ function carCheckBoxes() {
     var map_container = document.getElementById("checkbox-container-outer");
 
     var checkbox_container = document.createElement("div");
-    checkbox_container.innerHTML = "Name : Car ID";
+    checkbox_container.innerHTML = "Name : Job Title : Car ID";
     checkbox_container.id = "checkbox-container_car";
     checkbox_container.className = "checkbox-dropdown col-md4";
 
@@ -57,7 +57,7 @@ function carCheckBoxes() {
 
         var label_item = document.createElement("label");
         label_item.for = d.CarID;
-        label_item.innerHTML = d.FirstName + " " + d.LastName + " : " + d.CarID;
+        label_item.innerHTML = d.FirstName + " " + d.LastName + " : " + d.CurrentEmploymentTitle + " : " + d.CarID;
         label_item.id = "c" + d.CarID;
         label_item.className = "car_label";
 
