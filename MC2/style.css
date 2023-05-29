@@ -33,11 +33,11 @@
 }
 
 .circles {
-    pointer-events:all;
+    pointer-events:auto;
 }
 
 .rectangles {
-    pointer-events:all;
+    pointer-events:auto;
 }
 
 #radio-buttons-container{
