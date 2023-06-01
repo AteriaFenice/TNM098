@@ -33,7 +33,6 @@ function daySlider() {
         start_date = lower_date;
         end_date = upper_date;
         getFilterData(lower_date, upper_date, chosen_id);
-        //console.log("updated filtered data");
     }
 
 }
@@ -73,12 +72,9 @@ function timeSlider() {
 
     // Update the data when finished sliding
     slider_lower.onchange = function() {
-        //console.log(this.value);
+
         var lower_date = new Date(used_year, used_month, start_date.getDate(), this.value, 0);
         var upper_date = new Date(used_year, used_month, end_date.getDate(), slider_upper.value, 0);
-        
-        //console.log('lower_date: ', lower_date);
-        //console.log('higher_date: ', upper_date);
 
         start_time = this.value;
         start_date = lower_date;
@@ -89,8 +85,6 @@ function timeSlider() {
 
     // Update the data when finished sliding
     slider_upper.onchange = function() {
-        //console.log(this.value);
-        //console.log(slider_lower.value);
         var lower_date = new Date(used_year, used_month, start_date.getDate(), slider_lower.value,0);
         var upper_date = new Date(used_year, used_month, end_date.getDate(), this.value,0);
         end_time = this.value;
@@ -102,13 +96,14 @@ function timeSlider() {
     
 }
 
-
+// Formating the text for the time textx
 function time_text(t){
 
     var time = ""; 
 
+    // Ad a 0 in front of the nr if it is smaller than 10
     if (t < 10) {
-        time = "0" + t + ":00";
+        time = "0" + t + ":00"; 
     } else {
         time = t + ":00";
     } 

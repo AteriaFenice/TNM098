@@ -27,7 +27,6 @@ roadMap.setAttribute('width', image_width)
 roadMap.setAttribute('id', 'roadMap')
 document.getElementById('map').appendChild(roadMap)
 
-// Get the data to be able to filter the data
 // Variables to save the data 
 var card_data = [];
 var loyalty_data = [];
@@ -65,11 +64,7 @@ var rangeRound = Math.round((data_end_date.getTime() - data_start_date.getTime()
 
 // Get weekday in text
 var days_text = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
-var chosen_id = [];
-
-//console.log(data_start_date);
-//console.log(data_end_date);
+var chosen_id = []; // for the chosen ids from the checkboxes
 
 // Tooltip style
 let tooltip = d3.select("body")
@@ -85,38 +80,32 @@ let tooltip = d3.select("body")
 .style("visibility", "hidden")
 .text("a simple tooltip");
 
-
+// Checking if to show credit card or loyalty card
 function chooseCardType(){
     var btn = document.getElementsByName('card');
     for (i = 0; i < btn.length; i++) {
         if (btn[i].checked)
             selectedCard = btn[i].value
     }
-    //console.log(selectedCard)
     drawCCPoints();
     drawGPSPoints();
 }
 
-
+// Get the data to be able to filter the data
 getData().then((output) => {
     // Filter the data after getting the data from the files 
     getFilterData(start_date, end_date, chosen_id);
-
-    //console.log('finished loading data');
 });
 
 async function getData() {
     try {
 
+        // Load in data from files
         car_data = await d3.csv('MC2/car-assignments.csv');
         gps_data = await d3.csv('MC2/gps.csv');
         card_data = await d3.csv('MC2/cc_data.csv');
         loyalty_data = await d3.csv('MC2/loyalty_data.csv');
 
-
-        //console.log(gps_data.length);
-
-        // CALL CREATE SLIDER FUNCTIONS HERE
         chooseCardType();
         daySlider();
         timeSlider();
@@ -131,14 +120,9 @@ async function getData() {
     }
 };
 
-function getFilterData(start_date, end_date, id){
-    //console.log(new Date(gps_data[0].Timestamp));
-    //console.log(car_data[0]);'
+function getFilterData(start_date, end_date){
 
-    //console.log("chosen start date: ", start_date);
-    //console.log("chosen end date: ", end_date)
-    //console.log("chosen id: ", id);
-
+    // Filter the data depending on the chosen time
     filtered_gps_data = gps_data.filter((data) => {
         const temp_date = new Date(data.Timestamp).getTime();
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
@@ -155,18 +139,11 @@ function getFilterData(start_date, end_date, id){
         return (temp_date >= start_date.getTime() && temp_date <= end_date.getTime());
     });
 
-    //console.log(filtered_gps_data.length);
-    //console.log(filtered_cc_data.length);
-
-    // CALL DRAW DATA POINTS HERE
-    
     drawCCPoints();
     drawGPSPoints();
     changeMenuColorCar();
     changeMenuColorCC();
     changeMenuColorLoy();
-    //storeCoords();
-
 }
 
 function unique(iterable) {

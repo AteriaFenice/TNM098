@@ -1,6 +1,5 @@
+/// Function for the drawing the gps data
 function drawGPSPoints() {
-
-    //console.log('drawingGPSPoints function called')
 
     var myColor = d3.scaleSequential().domain([1,car_data.length]).interpolator(d3.interpolateViridis);
 
@@ -35,9 +34,9 @@ function drawGPSPoints() {
             return tooltip.style("visibility", "hidden");
         });
 
-        //console.log('gps data points drawn');
 }
 
+// Checkboxes for the people assigned to the cars
 function carCheckBoxes() {
     var map_container = document.getElementById("checkbox-container-outer");
 
@@ -81,10 +80,8 @@ function carCheckBoxes() {
         var id = this.value;
     
         if(this.checked == true){
-            //console.log(id + " checked");
             checked_ids.push(id); // if checked add to checked_ids that is used later in drawing the gps points
         } else {
-            //console.log(id + " unchecked");
             var index = checked_ids.indexOf(id);
             checked_ids.splice(index,1);
         }
@@ -104,7 +101,7 @@ function carCheckBoxes() {
 
 }
 
-
+// Highlight in the menu
 function changeMenuColorCar() {
 
     let obj = unique(filtered_gps_data.filter( item => (
@@ -119,7 +116,6 @@ function changeMenuColorCar() {
 
     obj.forEach( d => {
         var label_item = document.getElementById( "c" + d );
-        //label_item.style.backgroundColor = '#D22B2B';
         label_item.style.backgroundColor = colorsBright[d-1];
     })
 

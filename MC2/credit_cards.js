@@ -1,23 +1,11 @@
+// Function for drawing the circles for the card purchaes
 function drawCCPoints(){
 
-    // get all unique card numbers and stores
-    //var cardNum = []
     var store = []
-
-    //if statement for cc or loyalty toggled
-    /*var data = card_data
-    data.num = card_data.last4ccnum
-    //var filte_data = filtered_cc_data.filter(function(d,i){ console.log(chosen_ccnr.indexOf(d.last4ccnum >= 0)); return chosen_ccnr.indexOf(d.last4ccnum >= 0)});
-    var filte_data = filtered_cc_data.filter(function(d,i){return chosen_ccnr.indexOf(d.num) >= 0});
-    var card = 'Credit Card: '*/
-
     var data = [];
     var filte_data = [];
     var card = ''
     var last4 = [];
-
-
-    //console.log(selectedCard)
 
     if(selectedCard == 'credit'){
         data = card_data
@@ -39,15 +27,11 @@ function drawCCPoints(){
         if(data == loyalty_data){
             data[i].num = loyalty_data[i].loyaltynum
         }
-        
-        //cardNum[i] = data[i].num
         store[i] = data[i].location
     }
-    //console.log(cardNum)
     
     var stores = unique(store)
-
-    //var myColor = d3.scaleSequential().domain([1,last4.size]).interpolator(d3.interpolateViridis);
+;
     var rad = 5
     var nodes = 0;
     var coords = 0;
@@ -78,16 +62,13 @@ function drawCCPoints(){
             return d.location == Array.from(stores)[i];
         })
 
-        //console.log('nodes of '+ Array.from(stores)[i] +': ', nodes.length)
         var coords = storeCoords(Array.from(stores)[i])
-
-        //createSimulation(nodes, coords, last4);¨
 
         const simulation = d3.forceSimulation(nodes)
         .force('charge', d3.forceManyBody().strength(5))
         .force('center', d3.forceCenter((coords[0]-MIN_LONG)*1000*MAPY*1.72+10, (image_width+50)/2-(coords[1]-MIN_LAT)*1000*MAPX*0.47))
         .force('collision', d3.forceCollide().radius(function(d){
-            return rad//d.price /10
+            return rad
         }))
 
         simulation.tick()
@@ -96,7 +77,6 @@ function drawCCPoints(){
 
         function ticked(){
             svg.selectAll('circle', '#circles')
-            //filtered_gps_data.filter(function(d,i){ return chosen_id.indexOf(d.id) >= 0})
             .data(nodes)
             .join('circle')
             .attr('class', 'circles')
@@ -132,7 +112,7 @@ function drawCCPoints(){
         }
     }
 
-    
+    // Adding tooltip to the circles
     d3.selectAll('circle')
     .on("mouseover", function() {
         return tooltip.style("visibility", "visible");
@@ -147,7 +127,7 @@ function drawCCPoints(){
     })
 };
 
-
+// Checkboxes for the credit card
 function ccCheckBoxes(){
 
     var map_container = document.getElementById("checkbox-container-outer");
@@ -191,16 +171,13 @@ function ccCheckBoxes(){
         var id = this.value;
 
         if(this.checked == true){
-            //console.log(id + " checked");
             checked_ccnr.push(id); // if checked add to checked_ids that is used later in drawing the gps points
         } else {
-            //console.log(id + " unchecked");
             var index = checked_ccnr.indexOf(id);
             checked_ccnr.splice(index,1);
         }
 
         chosen_ccnr = checked_ccnr; // replace array with new array with ids
-        //drawGPSPoints();
         drawCCPoints();
         drawGPSPoints();
     }
@@ -216,6 +193,7 @@ function ccCheckBoxes(){
    
 }
 
+// Loyalty card checkboxes
 function loyCheckBoxes(){
 
     var map_container = document.getElementById("checkbox-container-outer");
@@ -259,16 +237,13 @@ function loyCheckBoxes(){
         var id = this.value;
 
         if(this.checked == true){
-            //console.log(id + " checked");
             checked_loynr.push(id); // if checked add to checked_ids that is used later in drawing the gps points
         } else {
-            //console.log(id + " unchecked");
             var index = checked_loynr.indexOf(id);
             checked_loynr.splice(index,1);
         }
 
         chosen_loynr = checked_loynr; // replace array with new array with ids
-        //drawGPSPoints();
         drawCCPoints();
         drawGPSPoints();
     }
@@ -284,6 +259,7 @@ function loyCheckBoxes(){
    
 }
 
+// Highligts for the menu
 function changeMenuColorCC() {
     let obj = unique(filtered_cc_data.filter( item => (
         ccnumlast4.includes(parseInt(item.last4ccnum))
@@ -302,7 +278,7 @@ function changeMenuColorCC() {
 
 }
 
-
+// Highligts for the menu
 function changeMenuColorLoy(){
     let obj = unique(filtered_lc_data.filter( item => (
         loynum.includes(item.loyaltynum)
@@ -319,23 +295,6 @@ function changeMenuColorLoy(){
         label_item.style.backgroundColor = '#D22B2B';
     })
 }
-
-
-// To find all unique cc last 4 nr 
-/*var ccnum = [];
-
-for(var i = 0; i < card_data.length; i++){
-
-    ccnum[i] = card_data[i].last4ccnum
-}
-
-var last4 = unique(ccnum)
-
-console.log(last4);
-
-var last4array = Array.from(last4).join(', ');
-console.log(last4array);*/
-
 
 
 
